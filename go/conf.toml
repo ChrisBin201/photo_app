@@ -1,0 +1,16 @@
+[database]
+host="mysql"
+port=3306
+user="dev"
+password="12345678"
+name="dev"
+
+[server]
+port=8900
+key="key"
+mode="dev"
+
+[log]
+format="json"
+level="info"
+noColor="no_color"
