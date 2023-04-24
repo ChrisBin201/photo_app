@@ -1,9 +1,9 @@
 package com.example.photo_app.api;
 
-import com.example.photo_app.model.LoginRequest;
-import com.example.photo_app.model.LoginResponse;
-import com.example.photo_app.model.Message;
 import com.example.photo_app.model.User;
+import com.example.photo_app.model.call.LoginRequest;
+import com.example.photo_app.model.call.LoginResponse;
+import com.example.photo_app.model.call.Message;
 
 import java.util.List;
 
@@ -11,13 +11,14 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
+import retrofit2.http.PUT;
 
 public interface UserService {
+
     UserService authService = ApiClient.createService(UserService.class, null);
 
     @POST("login")
-    Call<LoginRequest> checkLogin(@Body LoginResponse loginResponse);
+    Call<LoginResponse> checkLogin(@Body LoginRequest loginRequest);
 
     @POST("registry")
     Call<Message> checkRegister(@Body User User);
@@ -25,9 +26,12 @@ public interface UserService {
     @GET("getUserFromJWT")
     Call<User> getUserFromJWT();
 
-    @GET("getUsersByFollowing/{id}")
-    Call<List<User>> getUsersByFollowing(@Path("id") Long id);
+    @GET("getUsersByFollowing")
+    Call<List<User>> getUsersByFollowing();
 
-    @GET("getUsersByFollowed/{id}")
-    Call<List<User>> getUsersByFollowed(@Path("id") Long id);
+    @GET("getUsersByFollowed")
+    Call<List<User>> getUsersByFollowed();
+
+    @PUT("updateUser")
+    Call<Message> updateUser(@Body User user);
 }

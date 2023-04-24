@@ -6,14 +6,15 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.photo_app.api.ApiClient;
 import com.example.photo_app.api.UserService;
-import com.example.photo_app.model.Message;
 import com.example.photo_app.model.User;
+import com.example.photo_app.model.call.Message;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,14 +23,14 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private Button registry_button, back_button;
-    private TextView username, password, address, fullname;
+    private EditText username, password, address, fullname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        registry_button = findViewById(R.id.register_button);
-        back_button = findViewById(R.id.back_button);
+        registry_button = findViewById(R.id.btnRegistry);
+        back_button = findViewById(R.id.btnBack);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         address = findViewById(R.id.address);
@@ -50,7 +51,12 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 User user = new User(null, username.getText().toString(), password.getText().toString(),
                         fullname.getText().toString(), address.getText().toString());
-                UserService.authService.checkRegister(user).enqueue(new Callback<Message>() {
+
+                Context context = getApplicationContext(); // Lấy Context của ứng dụng
+
+                UserService userService = ApiClient.createService(UserService.class, context);
+                Call<Message> call = userService.checkRegister(user);
+                call.enqueue(new Callback<Message>() {
                     @Override
                     public void onResponse(Call<Message> call, Response<Message> response) {
                         if (response.isSuccessful()) {

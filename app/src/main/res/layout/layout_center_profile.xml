@@ -27,34 +27,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center"
                 android:weightSum="100">
 
 
+<!--                <RelativeLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:layout_marginStart="25dp"-->
+<!--                    android:layout_weight="25">-->
+
+<!--                    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                        android:id="@+id/profile_photo"-->
+<!--                        android:layout_width="80dp"-->
+<!--                        android:layout_height="80dp"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        app:civ_border_color="@color/black"-->
+<!--                        app:civ_border_width="0.5dp"/>-->
+
+
+<!--                </RelativeLayout>-->
+
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="25dp"
-                    android:layout_weight="25">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/profile_photo"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_centerVertical="true"
-                        app:civ_border_color="@color/black"
-                        app:civ_border_width="0.5dp"/>
-
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
+                    android:layout_width="341dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="30dp"
+                    android:layout_gravity="center"
                     android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
                     android:layout_weight="75">
 
-                    <include layout="@layout/snippet_top_profile"/>
+                    <include layout="@layout/snippet_top_profile" />
 
                 </RelativeLayout>
 
@@ -71,32 +73,32 @@
                 android:background="@drawable/white_grey_border_bottom">
 
                 <TextView
-                    android:id="@+id/display_name"
+                    android:id="@+id/fullname_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mitch"
+                    android:text="Le Tuan Minh"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
                 <TextView
-                    android:id="@+id/description"
+                    android:id="@+id/address_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="I live in Vancouver, BC"
+                    android:text="Thai Binh"
                     android:textColor="@color/black"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:id="@+id/website"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="https://codingwithmitch.com"
-                    android:textColor="@color/link_blue"
-                    android:textSize="16sp"
-                    />
+<!--                <TextView-->
+<!--                    android:id="@+id/website"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    android:text="https://codingwithmitch.com"-->
+<!--                    android:textColor="@color/link_blue"-->
+<!--                    android:textSize="16sp"-->
+<!--                    />-->
 
 
             </LinearLayout>

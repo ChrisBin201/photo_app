@@ -1,10 +1,10 @@
-package com.example.photo_app.model;
+package com.example.photo_app.model.call;
 
-public class LoginResponse {
+public class LoginRequest {
     private String username;
     private String password;
 
-    public LoginResponse(String username, String password) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -1,10 +1,10 @@
-package com.example.photo_app.model;
+package com.example.photo_app.model.call;
 
-public class LoginRequest {
+public class LoginResponse {
     private String accessToken;
     private String tokenType;
 
-    public LoginRequest(String accessToken, String tokenType) {
+    public LoginResponse(String accessToken, String tokenType) {
         this.accessToken = accessToken;
         this.tokenType = tokenType;
     }

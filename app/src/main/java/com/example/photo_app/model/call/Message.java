@@ -1,4 +1,4 @@
-package com.example.photo_app.model;
+package com.example.photo_app.model.call;
 
 public class Message {
     private String message;
