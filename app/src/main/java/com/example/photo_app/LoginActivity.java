@@ -24,8 +24,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText editTextUsername, editTextPassword;
-    private Button buttonLogin;
+    private Button buttonLogin, buttonBypass;
     private TextView buttonRegister;
+
 
     public LoginActivity() {
     }
@@ -38,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.btnLogin);
         buttonRegister = findViewById(R.id.link_signup);
+        buttonBypass = findViewById(R.id.btnBypass);
 
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +91,13 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Unable to call server", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+        buttonBypass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         buttonRegister.setOnClickListener(new View.OnClickListener() {

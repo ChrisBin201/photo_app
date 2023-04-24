@@ -27,8 +27,8 @@ public interface UserService {
     @GET("getUserFromJWT")
     Call<User> getUserFromJWT();
 
-    @GET("getUsersByFollowing")
-    Call<List<User>> getUsersByFollowing();
+    @GET("getUsersByFollowing/{userId}")
+    Call<List<Integer>> getUsersByFollowing(@Path("userId") int userId);
 
     @GET("getUsersByFollowed")
     Call<List<User>> getUsersByFollowed();
