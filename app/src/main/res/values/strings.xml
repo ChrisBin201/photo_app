@@ -1,6 +1,11 @@
 <resources>
-    <string name="search_user">user</string>
-    <string name="search_post">post</string>
+<!--    <string name="search_user">user</string>-->
+    <!--    <string name="search_post">post</string>-->
+
+    <string-array name="category">
+        <item>user</item>
+        <item>post</item>
+    </string-array>
 
 
     <string name="app_name">photo_app</string>

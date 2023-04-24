@@ -41,8 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = context.getSharedPreferences("dataLogin", MODE_PRIVATE);
                 String token = sharedPreferences.getString("accessToken", "");
-                System.out.println(token);
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -62,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             Message message = response.body();
                             Toast.makeText(RegisterActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                             startActivity(intent);
                         } else {
                             Toast.makeText(RegisterActivity.this, "Error: Username is already taken!", Toast.LENGTH_SHORT).show();

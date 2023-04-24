@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -66,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
                             LoginResponse loginResponse = response.body();
+
+                            Log.i("TAG", "onResponse: " + loginResponse.getAccessToken());
 
                             //  Lưu giá trị token vào SharedPreferences
                             SharedPreferences prefs = getSharedPreferences("dataLogin", MODE_PRIVATE);

@@ -12,6 +12,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 public interface UserService {
 
@@ -34,4 +35,7 @@ public interface UserService {
 
     @PUT("updateUser")
     Call<Message> updateUser(@Body User user);
+
+    @GET("getUsersByKeyword/{keyword}")
+    Call<List<User>> getUsersByKeyword(@Path("keyword") String keyword);
 }

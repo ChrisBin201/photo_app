@@ -1,11 +1,15 @@
 package com.example.photo_app.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +17,15 @@ import androidx.fragment.app.Fragment;
 
 import com.example.photo_app.EditProfileActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.api.ApiClient;
+import com.example.photo_app.api.UserService;
+import com.example.photo_app.model.User;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentProfile extends Fragment {
 
@@ -27,7 +40,13 @@ public class FragmentProfile extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Button btnEditProfile;
+        TextView tvFollowers, tvFollowing, tvName, tvAddress;
+
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        tvFollowers = view.findViewById(R.id.tvFollowers);
+        tvFollowing = view.findViewById(R.id.tvFollowing);
+        tvName = view.findViewById(R.id.tvName);
+        tvAddress = view.findViewById(R.id.tvAddress);
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,76 +55,60 @@ public class FragmentProfile extends Fragment {
                 startActivity(intent);
             }
         });
-//
-//        UserService.authService.getUsersByFollowing().enqueue(new Callback<List<User>>() {
-//            @Override
-//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-//                if (response.isSuccessful()) {
-//                    List<User> following = response.body();
-//                    Log.i("TAG", "onResponse: " + following.size());
-//                    Toast.makeText(getContext(), following.size(), Toast.LENGTH_SHORT).show();
-//                }
-//                Toast.makeText(getContext(), response.code() + " "
-//                        + response.message(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<User>> call, Throwable t) {
-//                Toast.makeText(getContext(), "Unable to call server", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        UserService.authService.getUsersByFollowed().enqueue(new Callback<List<User>>() {
-//            @Override
-//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-//                if (response.isSuccessful()) {
-//                    List<User> follower = response.body();
-//                    Log.i("TAG", "onResponse: " + follower.size());
-//                    Toast.makeText(getContext(), follower.size(), Toast.LENGTH_SHORT).show();
-//                }
-//                Toast.makeText(getContext(), response.code() + " "
-//                        + response.message(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<User>> call, Throwable t) {
-//                Toast.makeText(getContext(), "Unable to call server", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        Context context = getContext();
 
-//        UserService userService = ApiClient.createService(UserService.class, context);
-//        Call<List<User>> call = userService.getUsersByFollowing();
-//        call.enqueue(new Callback<List<User>>() {
-//            @Override
-//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-//                if (response.isSuccessful()) {
-//                    List<User> following = response.body();
-//                    Log.i("TAG", "onResponse: " + following.size());
-//                    Toast.makeText(context, following.size(), Toast.LENGTH_SHORT).show();
-//                }
-//                Toast.makeText(context, response.code() + " "
-//                        + response.message(), Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<User>> call, Throwable t) {
-//                Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        UserService.authService.getUsersByFollowing().enqueue(new Callback<List<User>>() {
-//            @Override
-//            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-//                if (response.isSuccessful()) {
-//                    List<User> followers = response.body();
-//                    Log.i("TAG", "onResponse: " + followers.size());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<User>> call, Throwable t) {
-//                Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        UserService userService = ApiClient.createService(UserService.class, context);
+        Call<List<User>> call = userService.getUsersByFollowing();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    List<User> following = response.body();
+                    Log.d("TAG", "onResponse following: " + following.size());
+                    if (following != null) tvFollowing.setText(String.valueOf(following.size()));
+                    else tvFollowing.setText("0");
+                } else Log.d("TAG", "onResponse: " + response.code() + " " + response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        call = userService.getUsersByFollowed();
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    List<User> followers = response.body();
+                    Log.d("TAG", "onResponse followers: " + followers.size());
+                    if (followers != null) tvFollowers.setText(String.valueOf(followers.size()));
+                    else tvFollowers.setText("0");
+                } else Log.d("TAG", "onResponse: " + response.code() + " " + response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Call<User> callGetUserFromJWT = userService.getUserFromJWT();
+        callGetUserFromJWT.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User userFromJWT = response.body();
+                if (userFromJWT != null) {
+                    tvName.setText(userFromJWT.getFullName());
+                    tvAddress.setText(userFromJWT.getAddress());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
