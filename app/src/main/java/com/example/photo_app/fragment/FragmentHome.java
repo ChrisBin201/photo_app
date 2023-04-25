@@ -47,9 +47,9 @@ public class FragmentHome extends Fragment {
         int userId = 1;
         ArrayList<Integer> followingIds = new ArrayList<>();
         // call get api to retrieve following ids using retrofit
-        PostApiClient postApiClient = new PostApiClient();
+        PostApiClient postApiClient = new PostApiClient(getContext());
         CookieManager cookieManager = FragmentUpload.getCookieManager();
-        postApiClient.getFeed(1, new Callback<ArrayList<Post>>() {
+        postApiClient.getFeed(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 if (response.isSuccessful()) {

@@ -15,8 +15,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface PostService {
-    @GET("get_feed/{user_id}")
-    Call<ArrayList<Post>> getFeed(@Path("user_id") int user_id);
+    @GET("get_feed")
+    Call<ArrayList<Post>> getFeed();
 
     @GET("get_post_imgs/{post_id}")
     Call<ArrayList<PostImgs>> getPostImgs(@Path("post_id") int post_id);
