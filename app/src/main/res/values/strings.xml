@@ -1,7 +1,9 @@
 <resources>
     <string name="search_user">user</string>
     <string name="search_post">post</string>
-
+    <string name="facebook_app_id">1539881546539485</string>
+    <string name="fb_login_protocol_scheme">fb1539881546539485</string>
+    <string name="facebook_client_token">d5895e05750e6cb4ea29ab33973a9ab3</string>
 
     <string name="app_name">photo_app</string>
 

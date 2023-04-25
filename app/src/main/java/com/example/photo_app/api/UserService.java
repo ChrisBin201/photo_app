@@ -6,6 +6,7 @@ import com.example.photo_app.model.call.LoginResponse;
 import com.example.photo_app.model.call.Message;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -17,21 +18,24 @@ public interface UserService {
 
     UserService authService = ApiClient.createService(UserService.class, null);
 
-    @POST("login")
+    @POST("auth/login")
     Call<LoginResponse> checkLogin(@Body LoginRequest loginRequest);
 
-    @POST("registry")
+    @POST("auth/login/facebook")
+    Call<LoginResponse> checkLoginFB(@Body Map<String,String> accessToken);
+
+    @POST("auth/register")
     Call<Message> checkRegister(@Body User User);
 
-    @GET("getUserFromJWT")
+    @GET("user/getUserFromJWT")
     Call<User> getUserFromJWT();
 
-    @GET("getUsersByFollowing")
+    @GET("user/getUsersByFollowing")
     Call<List<User>> getUsersByFollowing();
 
-    @GET("getUsersByFollowed")
+    @GET("user/getUsersByFollowed")
     Call<List<User>> getUsersByFollowed();
 
-    @PUT("updateUser")
+    @PUT("user/updateUser")
     Call<Message> updateUser(@Body User user);
 }
