@@ -20,6 +20,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/lnListFollowers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -44,6 +45,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnListFollowing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

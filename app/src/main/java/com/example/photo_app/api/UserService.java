@@ -38,4 +38,22 @@ public interface UserService {
 
     @GET("getUsersByKeyword/{keyword}")
     Call<List<User>> getUsersByKeyword(@Path("keyword") String keyword);
+
+    @POST("follow/{id}")
+    Call<Message> follow(@Path("id") Long id);
+
+    @POST("unfollow/{id}")
+    Call<Message> unfollow(@Path("id") Long id);
+
+    @GET("getFollowing/{id}")
+    Call<List<User>> getFollowing(@Path("id") Long id);
+
+    @GET("getFollowed/{id}")
+    Call<List<User>> getFollowed(@Path("id") Long id);
+
+    @GET("checkFollow/{id}")
+    Call<Message> checkFollow(@Path("id") Long id);
+
+    @GET("getUserById/{id}")
+    Call<User> getUserById(@Path("id") Long id);
 }

@@ -40,7 +40,6 @@ public class HeaderInterceptor implements Interceptor {
         for (int i = 0, size = headers.size(); i < size; i++) {
             String name = headers.name(i);
             String value = headers.value(i);
-            Log.d("HeaderInterceptor", name + ": " + value);
         }
 
         return chain.proceed(newRequest);

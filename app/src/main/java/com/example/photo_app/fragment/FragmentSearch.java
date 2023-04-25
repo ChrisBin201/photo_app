@@ -11,10 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photo_app.ProfileViewActivity;
@@ -50,33 +52,6 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
         btnSearch = view.findViewById(R.id.btnSearch);
         recycleView = view.findViewById(R.id.recycleView);
         radioGroup = view.findViewById(R.id.radio_group);
-
-        if (radioGroup.getCheckedRadioButtonId() != -1) {
-            int scopeID = radioGroup.getCheckedRadioButtonId();
-            RadioButton radioButton = radioGroup.findViewById(scopeID);
-            String object = radioButton.getText().toString();
-            if (object.equals("user")) {
-                adapter = new RecycleViewAdapterUser();
-                Context context = getContext();
-                UserService userService = ApiClient.createService(UserService.class, context);
-                Call<List<User>> call = userService.getUsersByKeyword(etSearch.getText().toString());
-                call.enqueue(new retrofit2.Callback<List<User>>() {
-                    @Override
-                    public void onResponse(Call<List<User>> call, retrofit2.Response<List<User>> response) {
-                        if (response.isSuccessful()) {
-                            List<User> users = response.body();
-                            adapter.setList(users);
-                            recycleView.setAdapter(adapter);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<User>> call, Throwable t) {
-                        Log.d("TAG", "onFailure: " + t.getMessage());
-                    }
-                });
-            }
-        }
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,18 +59,40 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                     int scopeID = radioGroup.getCheckedRadioButtonId();
                     RadioButton radioButton = radioGroup.findViewById(scopeID);
                     String object = radioButton.getText().toString();
-                    if (object.equals("user")) {
+                    String keyword = etSearch.getText().toString();
+                    if (keyword.isEmpty()) keyword = " ";
+                    if (object.equals("User")) {
                         adapter = new RecycleViewAdapterUser();
                         Context context = getContext();
                         UserService userService = ApiClient.createService(UserService.class, context);
-                        Call<List<User>> call = userService.getUsersByKeyword(etSearch.getText().toString());
+                        Call<List<User>> call = userService.getUsersByKeyword(keyword);
                         call.enqueue(new retrofit2.Callback<List<User>>() {
                             @Override
                             public void onResponse(Call<List<User>> call, retrofit2.Response<List<User>> response) {
                                 if (response.isSuccessful()) {
                                     List<User> users = response.body();
-                                    adapter.setList(users);
-                                    recycleView.setAdapter(adapter);
+                                    if (users == null)
+                                        Toast.makeText(getContext(), "No user found", Toast.LENGTH_SHORT).show();
+                                    else {
+                                        Toast.makeText(getContext(), "Found " + users.size() + " users", Toast.LENGTH_SHORT).show();
+                                        for (User user : users) {
+                                            Log.d("TAG", "onResponse: " + user.toString());
+                                        }
+                                        adapter.setList(users);
+                                        recycleView.setAdapter(adapter);
+                                        LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+                                        recycleView.setLayoutManager(manager);
+                                        recycleView.setAdapter(adapter);
+                                        adapter.setItemListener(new RecycleViewAdapterUser.ItemListener() {
+                                            @Override
+                                            public void OnItemClick(View view, int p) {
+                                                User user = adapter.getItem(p);
+                                                Intent intent = new Intent(getActivity(), ProfileViewActivity.class);
+                                                intent.putExtra("user", user);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
                                 }
                             }
 
@@ -105,7 +102,8 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                             }
                         });
                     }
-                }
+                } else
+                    Toast.makeText(getContext(), "Please select a object", Toast.LENGTH_SHORT).show();
             }
         });
     }

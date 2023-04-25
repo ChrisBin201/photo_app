@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private Button btnSubmit, btnBack;
     private EditText fullname, address, username;
+    private ImageView backArrow;
     private User user;
 
 
@@ -36,7 +38,8 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_editprofile);
         btnSubmit = findViewById(R.id.btnSubmit);
-        btnBack = findViewById(R.id.btnBack);
+//        btnBack = findViewById(R.id.btnBack);
+        backArrow = findViewById(R.id.backArrow);
         fullname = findViewById(R.id.fullname);
         address = findViewById(R.id.address);
         username = findViewById(R.id.username);
@@ -87,7 +90,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        btnBack.setOnClickListener(new View.OnClickListener() {
+        backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

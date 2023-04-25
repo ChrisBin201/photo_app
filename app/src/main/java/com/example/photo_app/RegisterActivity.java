@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,19 +25,21 @@ public class RegisterActivity extends AppCompatActivity {
 
     private Button registry_button, back_button;
     private EditText username, password, address, fullname;
+    private ImageView backArrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         registry_button = findViewById(R.id.btnRegistry);
-        back_button = findViewById(R.id.btnBack);
+//        back_button = findViewById(R.id.btnBack);
+        backArrow = findViewById(R.id.backArrow);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         address = findViewById(R.id.address);
         fullname = findViewById(R.id.fullname);
         final Context context = getApplicationContext(); // Lấy Context của ứng dụng
-        back_button.setOnClickListener(new View.OnClickListener() {
+        backArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences sharedPreferences = context.getSharedPreferences("dataLogin", MODE_PRIVATE);
