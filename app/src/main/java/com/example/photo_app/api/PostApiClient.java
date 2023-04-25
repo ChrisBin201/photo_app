@@ -1,5 +1,6 @@
 package com.example.photo_app.api;
 
+import android.content.Context;
 import android.content.Intent;
 
 import com.example.photo_app.model.Post;
@@ -18,17 +19,19 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PostApiClient {
     private  final PostService postService;
 
-    public PostApiClient() {
+    public PostApiClient(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:5000/api/")
+//                .baseUrl("http://10.0.2.2:5000/api/")
+                .baseUrl("http://172.16.2.161:9000/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        postService = retrofit.create(PostService.class);
+//        postService = retrofit.create(PostService.class);
+        postService = ApiClient.createService(PostService.class,context);
     }
 
-    public void getFeed(int userId, Callback<ArrayList<Post>> callback) {
-        Call<ArrayList<Post>> getFeed = postService.getFeed(userId);
+    public void getFeed(Callback<ArrayList<Post>> callback) {
+        Call<ArrayList<Post>> getFeed = postService.getFeed();
         getFeed.enqueue(callback);
     }
 

@@ -174,7 +174,7 @@ public class FragmentUpload extends Fragment {
                                 photoIds.add(pid.getId());
                             }
                             String caption = edtCaption.getText().toString();
-                            PostApiClient postApiClient = new PostApiClient();
+                            PostApiClient postApiClient = new PostApiClient(getContext());
                             Map<String, Object> body = new HashMap<>();
                             body.put("caption", caption);
                             body.put("image_ids", photoIds);
