@@ -45,20 +45,23 @@ public class FragmentHome extends Fragment {
                 .build();
 
         PostService postService = retrofit.create(PostService.class);
-        Call<ArrayList<Integer>> call = postService.getFeed(userId);
-        call.enqueue(new Callback<ArrayList<Integer>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Integer>> call, Response<ArrayList<Integer>> response) {
-                JsonObject json = new JsonObject();
+//        Call<ArrayList<Integer>> call = postService.getFeed(userId);
+//        call.enqueue(new Callback<ArrayList<Integer>>() {
+//            @Override
+//            public void onResponse(Call<ArrayList<Integer>> call, Response<ArrayList<Integer>> response) {
+//                JsonObject json = new JsonObject();
+//
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ArrayList<Integer>> call, Throwable t) {
+//
+//            }
+//        });
 
 
-            }
 
-            @Override
-            public void onFailure(Call<ArrayList<Integer>> call, Throwable t) {
-
-            }
-        });
 //        // get following ids from server
 //        UserService userService = retrofit.create(UserService.class);
 //        Call<List<Integer>> call = userService.getUsersByFollowing(userId);

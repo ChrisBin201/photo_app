@@ -60,3 +60,4 @@ local.properties
 
 # SQL
 *.sql
+/.idea/
