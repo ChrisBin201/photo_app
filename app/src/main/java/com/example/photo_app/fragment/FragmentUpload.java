@@ -4,7 +4,6 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.photo_app.R;
-import com.example.photo_app.adapter.ImageListAdapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FragmentUpload extends Fragment {
@@ -71,9 +68,9 @@ public class FragmentUpload extends Fragment {
                 } else if (data.getData() != null) {
                     selectedImages.add(data.getData().toString());
                 }
-                ListView imgList = getView().findViewById(R.id.imgList);
-                ImageListAdapter adapter = new ImageListAdapter(getContext(), selectedImages);
-                imgList.setAdapter(adapter);
+//                ListView imgList = getView().findViewById(R.id.imgList);
+//                ImagePagerAdapter adapter = new ImagePagerAdapter(getContext(), selectedImages);
+//                imgList.setAdapter(adapter);
             }
         }
     }

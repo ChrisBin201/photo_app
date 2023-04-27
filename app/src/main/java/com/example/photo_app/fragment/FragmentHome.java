@@ -1,24 +1,29 @@
 package com.example.photo_app.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.photo_app.R;
+import com.example.photo_app.adapter.PostAdapter;
+import com.example.photo_app.api.PostApiClient;
 import com.example.photo_app.api.PostService;
-import com.example.photo_app.api.UserService;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.example.photo_app.model.Post;
+import com.example.photo_app.model.PostImgs;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,49 +44,38 @@ public class FragmentHome extends Fragment {
         int userId = 1;
         ArrayList<Integer> followingIds = new ArrayList<>();
         // call get api to retrieve following ids using retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:5000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        PostService postService = retrofit.create(PostService.class);
-        Call<ArrayList<Integer>> call = postService.getFeed(userId);
-        call.enqueue(new Callback<ArrayList<Integer>>() {
+        PostApiClient postApiClient = new PostApiClient();
+        postApiClient.getFeed(1, new Callback<ArrayList<Post>>() {
             @Override
-            public void onResponse(Call<ArrayList<Integer>> call, Response<ArrayList<Integer>> response) {
-                JsonObject json = new JsonObject();
+            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                if (response.isSuccessful()) {
+                    ArrayList<Post> posts = response.body();
+                    // Initialize RecyclerView and its adapter
+                    RecyclerView recyclerView = view.findViewById(R.id.recycleViewItemPost);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                    PostAdapter postAdapter = new PostAdapter(posts, postApiClient);
+                    recyclerView.setAdapter(postAdapter);
+                    // notify adapter that data has changed
+                    postAdapter.notifyDataSetChanged();
 
-
+                } else {
+                    // handle request errors depending on status code
+                    Log.e("Error 1: ", response.message());
+                }
             }
 
             @Override
-            public void onFailure(Call<ArrayList<Integer>> call, Throwable t) {
-
+            public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                // handle failure
+                Log.e("Error: ", t.getMessage());
             }
         });
-//        // get following ids from server
-//        UserService userService = retrofit.create(UserService.class);
-//        Call<List<Integer>> call = userService.getUsersByFollowing(userId);
-//        call.enqueue(new Callback<List<Integer>>() {
-//            @Override
-//            public void onResponse(Call<List<Integer>> call, Response<List<Integer>> response) {
-//                if (response.isSuccessful()) {
-//                    JsonObject json = new JsonObject();
-//                    JsonArray followingListJson = json.getAsJsonArray("following_list");
-//                    List<Integer> followingList = new ArrayList<>();
-//                    for (JsonElement followingId : followingListJson) {
-//                        followingList.add(followingId.getAsInt());
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<List<Integer>> call, Throwable t) {
-//            }
-//        });
 
 
-        ArrayList<Integer> postIds = new ArrayList<>();
-        // get all postids from server
+
+
+
+
+
     }
 }
