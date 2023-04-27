@@ -5,11 +5,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+        <WebView
+            android:id="@+id/webViewFlickrLogin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+
+        </WebView>
     <Button
         android:id="@+id/btnSelectPicture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Select Picture"
+
         android:textSize="20dp" />
 
     <ListView
