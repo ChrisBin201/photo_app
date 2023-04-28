@@ -1,9 +1,14 @@
 package com.example.photo_app.api;
 
+import android.content.Intent;
+
 import com.example.photo_app.model.Post;
 import com.example.photo_app.model.PostImgs;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,4 +36,11 @@ public class PostApiClient {
         Call<ArrayList<PostImgs>> getPostImgs = postService.getPostImgs(postId);
         getPostImgs.enqueue(callback);
     }
+
+    public void uploadPost(Map<String, Object> body, Callback<Post> callback) {
+
+        Call<Post> uploadPost = postService.uploadPost(body);
+        uploadPost.enqueue(callback);
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.photo_app.R;
 import com.example.photo_app.adapter.ImageListAdapter;
+import com.example.photo_app.adapter.PostAdapter;
 import com.example.photo_app.api.FlickrService;
 import com.example.photo_app.api.GoClient;
+import com.example.photo_app.api.PostApiClient;
+import com.example.photo_app.model.Post;
 import com.example.photo_app.model.call.flickr.PhotoIdResponse;
 import com.example.photo_app.model.call.flickr.PhotoSourceResponse;
 import com.example.photo_app.utils.Utils;
@@ -36,6 +40,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +54,8 @@ import retrofit2.Response;
 import retrofit2.http.Multipart;
 
 public class FragmentUpload extends Fragment {
-
+    private ImageListAdapter adapter;
+    private EditText edtCaption;
     private ArrayList<String> selectedImages = new ArrayList<>();
     private ArrayList<File> selectedFiles = new ArrayList<>();
     private WebView webView;
@@ -66,7 +72,7 @@ public class FragmentUpload extends Fragment {
         Button btnSelect = view.findViewById(R.id.btnSelectPicture);
         Button btnUpload = view.findViewById(R.id.btnUpload);
         Button loginWithFlickr = view.findViewById(R.id.btnFlickrLogin);
-        EditText edtCaption = view.findViewById(R.id.edtCaption);
+        edtCaption = view.findViewById(R.id.edtCaption);
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,7 +120,6 @@ public class FragmentUpload extends Fragment {
                         cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_token", query_pairs.get("flickr_access_token")));
                         cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_secret", query_pairs.get("flickr_access_secret")));
 
-                        edtCaption.setText(userID[0]);
                         ViewGroup parent =(ViewGroup) webView.getParent();
                         parent.removeView(webView);
                     } catch (MalformedURLException e) {
@@ -155,51 +160,54 @@ public class FragmentUpload extends Fragment {
                     call.enqueue(new Callback<PhotoIdResponse>() {
                         @Override
                         public void onResponse(Call<PhotoIdResponse> call, Response<PhotoIdResponse> response) {
+
                             System.out.println("SUCCESS with size --------- " + response.body().getResponse().size());
                             System.out.println(response.body().getResponse().get(0).getId());
+                            List<PhotoIdResponse.photoId>  pids = response.body().getResponse();
+                            ArrayList<String> photoIds = new ArrayList<>();
+                            for (PhotoIdResponse.photoId pid: pids){
+                                photoIds.add(pid.getId());
+                            }
+                            String caption = edtCaption.getText().toString();
+                            PostApiClient postApiClient = new PostApiClient();
+                            Map<String, Object> body = new HashMap<>();
+                            body.put("caption", caption);
+                            body.put("image_ids", photoIds);
+                            body.put("user_id", 1);
+
+                            postApiClient.uploadPost(body, new Callback<Post>() {
+                                @Override
+                                public void onResponse(Call<Post> call, Response<Post> response) {
+                                    Post post = response.body();
+                                    Log.d("Upload success:", post.toString());
+                                    Toast.makeText(getActivity(), "Post uploaded successfully", Toast.LENGTH_SHORT).show();
+                                    // reset all fields
+                                    edtCaption.setText("");
+                                    selectedFiles.clear();
+                                    selectedImages.clear();
+                                    if (adapter != null) {
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Post> call, Throwable t) {
+                                    Log.e("Upload error:", t.getMessage());
+                                }
+                            });
+
+
                         }
 
                         @Override
                         public void onFailure(Call<PhotoIdResponse> call, Throwable t) {
-                            System.out.println("FAILED");
+                            Log.e("Upload error:", t.getMessage());
                         }
                     });
                     selectedFiles.clear();
                     selectedImages.clear();
 
 
-                    // Example call for single url : receive PhotoSourceResponse
-                    String photoId ="";
-                    Call<PhotoSourceResponse> call1 = flickrService.getImageUrl(photoId);
-                    call1.enqueue(new Callback<PhotoSourceResponse>() {
-                        @Override
-                        public void onResponse(Call<PhotoSourceResponse> call, Response<PhotoSourceResponse> response) {
-                            // url_o (Label original)
-                            // url_q (Label large square url)
-                            // url_t (thumbnail url)
-                            // url_s, (label square)
-                            // url_m, (Label small)
-                            // url_n, (Label small320)
-                            // url_z, (Label medium 640)
-                            // url_c, (Label medium 800)
-                            // url_l (Label: large square)
-                            // h,k
-
-                            //get source: direct link to png
-                            //get url: link to size selection
-                            String url = response.body().getPhotoSources().get(0).getSource();
-
-                            // simple loading
-//                            ImageView imageView = (ImageView) findViewById(R.id.my_image_view);
-//                            Glide.with(this).load("https://goo.gl/gEgYUd").into(imageView);
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<PhotoSourceResponse> call, Throwable t) {
-
-                        }
-                    });
 
 
                 }
@@ -232,7 +240,7 @@ public class FragmentUpload extends Fragment {
                     selectedImages.add(data.getData().toString());
                 }
                 ListView imgList = getView().findViewById(R.id.imgList);
-                ImageListAdapter adapter = new ImageListAdapter(getContext(), selectedImages);
+                adapter = new ImageListAdapter(getContext(), selectedImages);
                 imgList.setAdapter(adapter);
                 try {
                     Thread.sleep(3000);

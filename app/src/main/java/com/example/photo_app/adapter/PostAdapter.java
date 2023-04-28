@@ -58,7 +58,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         ArrayList<PostImgs> imgs = response.body();
                         ArrayList<String> imageUrls = new ArrayList<>();
                         for (PostImgs img : imgs) {
-                            int imgId = img.getImage_id();
+                            String imgId = img.getImage_id();
                             // TODO: Call API service to get the image URL based on the imgId value
                             String imgUrl = "https://pbs.twimg.com/profile_images/1544722618275827713/9-aMN_Wb_400x400.jpg";
 
