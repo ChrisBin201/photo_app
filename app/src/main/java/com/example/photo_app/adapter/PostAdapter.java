@@ -1,5 +1,6 @@
 package com.example.photo_app.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.photo_app.R;
+import com.example.photo_app.api.FlickrService;
 import com.example.photo_app.api.PostApiClient;
 import com.example.photo_app.api.PostService;
+import com.example.photo_app.fragment.FragmentUpload;
 import com.example.photo_app.model.Post;
 import com.example.photo_app.model.PostImgs;
+import com.example.photo_app.model.call.flickr.PhotoSourceResponse;
+import com.example.photo_app.model.call.flickr.PhotoURLResponse;
 
 import java.lang.reflect.Array;
+import java.net.CookieManager;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -27,10 +33,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private ArrayList<Post> posts;
     private PostApiClient postApiClient;
+    private Context context;
+    private FlickrService flickrService;
 
-    public PostAdapter(ArrayList<Post> posts, PostApiClient postApiClient) {
+    public PostAdapter(ArrayList<Post> posts, PostApiClient postApiClient, Context context, FlickrService flickrService) {
         this.posts = posts;
         this.postApiClient = postApiClient;
+        this.context = context;
+        this.flickrService = flickrService;
     }
 
     @NonNull
@@ -59,10 +69,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         ArrayList<String> imageUrls = new ArrayList<>();
                         for (PostImgs img : imgs) {
                             String imgId = img.getImage_id();
+                            String imgUrl = "";
                             // TODO: Call API service to get the image URL based on the imgId value
-                            String imgUrl = "https://pbs.twimg.com/profile_images/1544722618275827713/9-aMN_Wb_400x400.jpg";
+                            Call<PhotoURLResponse> photoCall = flickrService.getImageUrlByImgId(imgId);
 
-                            imageUrls.add(imgUrl);
+                            photoCall.enqueue(new Callback<PhotoURLResponse>() {
+                                @Override
+                                public void onResponse(Call<PhotoURLResponse> call, Response<PhotoURLResponse> response) {
+                                    System.out.println("SUCCESS");
+                                    String imgUrl = response.body().getUrl();
+                                    if(!imgUrl.equals(""))
+                                        imageUrls.add(imgUrl);
+                                }
+
+                                @Override
+                                public void onFailure(Call<PhotoURLResponse> call, Throwable t) {
+                                    System.out.println("FAILED");
+                                }
+                            });
+//                            String imgUrl = "https://pbs.twimg.com/profile_images/1544722618275827713/9-aMN_Wb_400x400.jpg";
                         }
                         post.setImageUrls(imageUrls);
                         holder.viewPager.setAdapter(new ImagePagerAdapter(imageUrls));

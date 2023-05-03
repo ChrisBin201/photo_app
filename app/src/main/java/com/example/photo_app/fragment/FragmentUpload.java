@@ -59,7 +59,12 @@ public class FragmentUpload extends Fragment {
     private ArrayList<String> selectedImages = new ArrayList<>();
     private ArrayList<File> selectedFiles = new ArrayList<>();
     private WebView webView;
-    private CookieManager cookieManager;
+    private static CookieManager cookieManager;
+
+    public static CookieManager getCookieManager() {
+        return cookieManager;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
