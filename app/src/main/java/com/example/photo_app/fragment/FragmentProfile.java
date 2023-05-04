@@ -16,14 +16,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.photo_app.AlbumActivity;
 import com.example.photo_app.EditProfileActivity;
 import com.example.photo_app.FollowedViewActivity;
 import com.example.photo_app.FollowingViewActivity;
+import com.example.photo_app.LoginActivity;
 import com.example.photo_app.R;
 import com.example.photo_app.api.ApiClient;
+import com.example.photo_app.api.FlickrService;
+import com.example.photo_app.api.GoClient;
 import com.example.photo_app.api.UserService;
 import com.example.photo_app.model.User;
+import com.example.photo_app.model.call.flickr.PhotosetsResponse;
 
+import java.net.CookieManager;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -34,6 +41,7 @@ public class FragmentProfile extends Fragment {
 
     private User user;
     private Button btnEditProfile;
+    private Button btnAlbums;
     private TextView tvFollowers, tvFollowing, tvName, tvAddress;
     private LinearLayout lnListFollowers, lnListFollowing;
 
@@ -55,12 +63,36 @@ public class FragmentProfile extends Fragment {
         tvAddress = view.findViewById(R.id.tvAddress);
         lnListFollowers = view.findViewById(R.id.lnListFollowers);
         lnListFollowing = view.findViewById(R.id.lnListFollowing);
+        btnAlbums = view.findViewById(R.id.btnAlbums);
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        btnAlbums.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CookieManager cookieManager = FragmentUpload.getCookieManager();
+                FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
+                Call<PhotosetsResponse> photosetsResponseCall = flickrService.getPhotosetByUserId();
+                photosetsResponseCall.enqueue(new Callback<PhotosetsResponse>() {
+                    @Override
+                    public void onResponse(Call<PhotosetsResponse> call, Response<PhotosetsResponse> response) {
+                        System.out.println("SUCCESS with size of "+ response.body().getResponse().size());
+                        ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
+
+                        startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
+                    }
+
+                    @Override
+                    public void onFailure(Call<PhotosetsResponse> call, Throwable t) {
+                        System.out.println("FAILED");
+                    }
+                });
             }
         });
         Context context = getContext();

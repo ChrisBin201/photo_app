@@ -16,11 +16,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.photo_app.R;
 import com.example.photo_app.adapter.PostAdapter;
+import com.example.photo_app.api.FlickrService;
+import com.example.photo_app.api.GoClient;
 import com.example.photo_app.api.PostApiClient;
 import com.example.photo_app.api.PostService;
 import com.example.photo_app.model.Post;
 import com.example.photo_app.model.PostImgs;
 
+import java.net.CookieManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +48,7 @@ public class FragmentHome extends Fragment {
         ArrayList<Integer> followingIds = new ArrayList<>();
         // call get api to retrieve following ids using retrofit
         PostApiClient postApiClient = new PostApiClient();
+        CookieManager cookieManager = FragmentUpload.getCookieManager();
         postApiClient.getFeed(1, new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
@@ -53,7 +57,9 @@ public class FragmentHome extends Fragment {
                     // Initialize RecyclerView and its adapter
                     RecyclerView recyclerView = view.findViewById(R.id.recycleViewItemPost);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                    PostAdapter postAdapter = new PostAdapter(posts, postApiClient);
+
+                    FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
+                    PostAdapter postAdapter = new PostAdapter(posts, postApiClient, getActivity(), flickrService);
                     recyclerView.setAdapter(postAdapter);
                     // notify adapter that data has changed
                     postAdapter.notifyDataSetChanged();

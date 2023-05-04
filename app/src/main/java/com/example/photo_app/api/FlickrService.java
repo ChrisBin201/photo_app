@@ -1,7 +1,10 @@
 package com.example.photo_app.api;
 
+import com.example.photo_app.model.call.flickr.PhotoByPhotosetResponse;
 import com.example.photo_app.model.call.flickr.PhotoIdResponse;
 import com.example.photo_app.model.call.flickr.PhotoSourceResponse;
+import com.example.photo_app.model.call.flickr.PhotoURLResponse;
+import com.example.photo_app.model.call.flickr.PhotosetsResponse;
 
 import java.util.List;
 
@@ -20,10 +23,18 @@ public interface FlickrService {
     @POST("flickr/upload_img")
     Call<PhotoIdResponse> uploadImages(@Part List<MultipartBody.Part> files);
 
+    // trả đầy đủ
     @GET("/api/v1/photo/getById")
     Call<PhotoSourceResponse> getImageUrl(@Query("photo_id") String id);
 
-    @GET("/api/v1/photoset")
-    Call<String> getPhotoset(Integer id);
+    // trả duy 1 nhất 1 url string (size original)
+    @GET("/api/v1/photo/getById")
+    Call<PhotoURLResponse> getImageUrlByImgId(@Query("photo_id") String id);
+
+    @GET("/api/v1/photoset/getByUserid")
+    Call<PhotosetsResponse> getPhotosetByUserId();
+
+    @GET("/api/v1/photoset/getPhotoByPhotosetId")
+    Call<PhotoByPhotosetResponse> getPhotoByPhotosetId(Integer photosetId);
 
 }
