@@ -5,17 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+        <WebView
+            android:id="@+id/webViewFlickrLogin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            >
+
+        </WebView>
     <Button
         android:id="@+id/btnSelectPicture"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Select Picture"
+
         android:textSize="20dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleView"
+    <ListView
+        android:id="@+id/imgList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginTop="10dp" />
 
     <EditText

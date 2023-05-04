@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,8 +24,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText editTextUsername, editTextPassword;
-    private Button buttonLogin;
+    private Button buttonLogin, buttonBypass;
     private TextView buttonRegister;
+
 
     public LoginActivity() {
     }
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.btnLogin);
         buttonRegister = findViewById(R.id.link_signup);
+        buttonBypass = findViewById(R.id.btnBypass);
 
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
                             LoginResponse loginResponse = response.body();
 
+                            Log.i("TAG", "onResponse: " + loginResponse.getAccessToken());
+
                             //  Lưu giá trị token vào SharedPreferences
                             SharedPreferences prefs = getSharedPreferences("dataLogin", MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
@@ -86,6 +91,13 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Unable to call server", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+        buttonBypass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         buttonRegister.setOnClickListener(new View.OnClickListener() {
