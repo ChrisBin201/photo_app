@@ -1,16 +1,33 @@
 package com.example.photo_app;
 import android.os.Bundle;
+import android.util.Log;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.photo_app.adapter.ViewPagerAdapter;
+import com.example.photo_app.model.notification.NotificationModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavi;
 
     private ViewPager viewPager;
+    List<NotificationModel> notifications = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +87,43 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+
+        // Listen for metadata changes to the document.
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        CollectionReference collectionRef  = db.collection("notifications");
+        db.collection("notifications")
+                .whereEqualTo("objectReceiveId", 3)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.w("MainActivity", "Listen failed.", error);
+                    return;
+                }
+
+                List<NotificationModel> notificationModels = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : value) {
+//                    if (doc.get("name") != null) {
+                    NotificationModel notification = new NotificationModel(
+                            doc.getLong("id"),
+                            doc.getLong("objectReceiveId"),
+                            doc.getString("type"),
+                            doc.getLong("objectSendId"),
+                            doc.getString("content"),
+                            doc.getString("status")
+                    );
+                    notificationModels.add(notification);
+//                    }
+                }
+                notifications.clear();
+                notifications.addAll(notificationModels);
+                bottomNavi.getOrCreateBadge(R.id.mNoti).setNumber(notifications.size());
+                Log.d("MainActivity", "Current notifications : " + notifications.size());
+            }
+        });
     }
+
+
 }
 
 

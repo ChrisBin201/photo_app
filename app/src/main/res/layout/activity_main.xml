@@ -19,6 +19,8 @@
         android:layout_alignParentBottom="true"
         app:itemIconTint="@color/navi"
         app:itemTextColor="@color/navi"
+        android:background="@color/black"
+        android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
         app:menu="@menu/navigation" />
 
 
