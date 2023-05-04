@@ -20,6 +20,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/lnListFollowers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -44,6 +45,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/lnListFollowing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -52,7 +54,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvFollowed"
+                    android:id="@+id/tvFollowing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
@@ -65,6 +67,13 @@
                     android:text="Following" />
             </LinearLayout>
         </LinearLayout>
+        <Button
+            android:id="@+id/btnAlbums"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Albums"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/btnEditProfile"
@@ -73,6 +82,7 @@
             android:layout_gravity="center"
             android:text="Edit Profile"
             android:textAllCaps="false" />
+
     </LinearLayout>
 
     <LinearLayout
