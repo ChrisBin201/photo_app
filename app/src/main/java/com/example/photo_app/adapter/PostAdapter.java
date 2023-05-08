@@ -54,7 +54,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void onBindViewHolder(@NonNull PostAdapter.PostViewHolder holder, int position) {
         Post post = posts.get(position);
         // later change to name
-        holder.tvName.setText("username to be displayed");
+        holder.tvName.setText("user " + post.getUser_id());
         holder.tvCaption.setText(post.getCaption());
         holder.tvTime.setText(post.getCreated_at());
 
@@ -67,19 +67,40 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     if (response.isSuccessful()) {
                         ArrayList<PostImgs> imgs = response.body();
                         ArrayList<String> imageUrls = new ArrayList<>();
-                        for (PostImgs img : imgs) {
-                            String imgId = img.getImage_id();
+                        int totalImgs = imgs.size();
+                        for (int i = 0; i < totalImgs; i++) {
+
+                            String imgId = imgs.get(i).getImage_id();
                             String imgUrl = "";
                             // TODO: Call API service to get the image URL based on the imgId value
                             Call<PhotoURLResponse> photoCall = flickrService.getImageUrlByImgId(imgId);
+                            final int finalI = i;
 
                             photoCall.enqueue(new Callback<PhotoURLResponse>() {
                                 @Override
                                 public void onResponse(Call<PhotoURLResponse> call, Response<PhotoURLResponse> response) {
-                                    System.out.println("SUCCESS");
-                                    String imgUrl = response.body().getUrl();
-                                    if(!imgUrl.equals(""))
-                                        imageUrls.add(imgUrl);
+                                    if (response.isSuccessful()) {
+                                        System.out.println("SUCCESS");
+                                        String imgUrl = response.body().getUrl();
+                                        if(!imgUrl.equals(""))
+                                            imageUrls.add(imgUrl);
+                                    }
+                                    else {
+                                        System.out.println("FAILED with status code: " + response.code());
+                                    }
+
+                                    if (finalI == totalImgs - 1) {
+                                        post.setImageUrls(imageUrls);
+                                        holder.viewPager.setAdapter(new ImagePagerAdapter(imageUrls));
+                                        holder.pageNumber.setText("1/" + imgs.size());
+                                        holder.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                                            @Override
+                                            public void onPageSelected(int position) {
+                                                holder.pageNumber.setText((position + 1) + "/" + imgs.size());
+                                            }
+                                        });
+                                        notifyDataSetChanged();
+                                    }
                                 }
 
                                 @Override
@@ -87,18 +108,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                     System.out.println("FAILED");
                                 }
                             });
-//                            String imgUrl = "https://pbs.twimg.com/profile_images/1544722618275827713/9-aMN_Wb_400x400.jpg";
                         }
-                        post.setImageUrls(imageUrls);
-                        holder.viewPager.setAdapter(new ImagePagerAdapter(imageUrls));
-                        holder.pageNumber.setText("1/" + imgs.size());
-                        holder.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                            @Override
-                            public void onPageSelected(int position) {
-                                holder.pageNumber.setText((position + 1) + "/" + imgs.size());
-                            }
-                        });
-                        notifyDataSetChanged();
                     } else {
                         // handle request errors depending on status code
                     }
