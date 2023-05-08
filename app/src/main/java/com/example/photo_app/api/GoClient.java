@@ -12,8 +12,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GoClient {
 
-//    private static final String BASE_URL = "http://172.16.2.148:8900/";
-    private static final String BASE_URL = "http://172.16.2.163:8900/";
+//    private static final String BASE_URL = "http://192.168.1.4:9000/";
+    private static final String BASE_URL = "http://172.26.63.159:8900/";
     private static Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create());
