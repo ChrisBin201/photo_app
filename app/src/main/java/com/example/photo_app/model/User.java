@@ -4,17 +4,19 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     private Long id;
-    private String username;
+    private String email;
     private String password;
     private String fullName;
     private String address;
+    private String authProvider;
 
-    public User(Long id, String username, String password, String fullName, String address) {
+    public User(Long id, String email, String password, String fullName, String address, String authProvider) {
         this.id = id;
-        this.username = username;
+        this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.address = address;
+        this.authProvider = authProvider;
     }
 
     public User() {
@@ -22,11 +24,11 @@ public class User implements Serializable {
     }
 
     public String getUsername() {
-        return username;
+        return email;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.email = username;
     }
 
     public String getPassword() {
@@ -61,11 +63,19 @@ public class User implements Serializable {
         this.id = id;
     }
 
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", username='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", address='" + address + '\'' +
