@@ -71,7 +71,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         for (int i = 0; i < totalImgs; i++) {
 
                             String imgId = imgs.get(i).getImage_id();
-                            String imgUrl = "";
                             // TODO: Call API service to get the image URL based on the imgId value
                             Call<PhotoURLResponse> photoCall = flickrService.getImageUrlByImgId(imgId);
                             final int finalI = i;
