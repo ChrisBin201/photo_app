@@ -23,11 +23,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-//                return new FragmentHome();
-                return new FragmentViewComments();
+                return new FragmentHome();
+//                return new FragmentViewComments();
             case 1:
-//                return new FragmentSearch();
-                return new FragmentViewRatings();
+                return new FragmentSearch();
+//                return new FragmentViewRatings();
             case 2:
                 return new FragmentUpload();
             case 3:
