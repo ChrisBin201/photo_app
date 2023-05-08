@@ -107,6 +107,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                     System.out.println("FAILED");
                                 }
                             });
+
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                     } else {
                         // handle request errors depending on status code
