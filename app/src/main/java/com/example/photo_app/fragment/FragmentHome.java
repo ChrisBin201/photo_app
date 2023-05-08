@@ -58,7 +58,7 @@ public class FragmentHome extends Fragment {
                     RecyclerView recyclerView = view.findViewById(R.id.recycleViewItemPost);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                    FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
+                    FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
                     PostAdapter postAdapter = new PostAdapter(posts, postApiClient, getActivity(), flickrService);
                     recyclerView.setAdapter(postAdapter);
                     // notify adapter that data has changed

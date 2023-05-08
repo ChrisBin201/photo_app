@@ -19,6 +19,29 @@ public class GoClient {
             .addConverterFactory(GsonConverterFactory.create());
 
     private static Retrofit retrofit = retrofitBuilder.build();
+    public static <T> T createServiceNonCookie(Class<T> serviceClass, Context context) {
+        OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder()
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS);
+        ;
+        // Nếu context khác null thì sử dụng HeaderInterceptor
+        if (context != null) {
+            httpClientBuilder.addInterceptor(new HeaderInterceptor(context));
+//            SharedPreferences prefs = context.getSharedPreferences("dataLogin", Context.MODE_PRIVATE);
+//            String token = prefs.getString("token", null);
+//            Log.i("token ApiClient createService", token);
+        }
+        OkHttpClient httpClient = httpClientBuilder.build();
+        Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient);
+        Retrofit retrofit = retrofitBuilder.build();
+
+        return retrofit.create(serviceClass);
+    }
+
 
     public static <T> T createService(Class<T> serviceClass, Context context, CookieManager cookieManager) {
         OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder() .cookieJar(new JavaNetCookieJar(cookieManager))
