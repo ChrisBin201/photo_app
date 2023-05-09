@@ -44,11 +44,8 @@ public class FragmentHome extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int userId = 1;
-        ArrayList<Integer> followingIds = new ArrayList<>();
         // call get api to retrieve following ids using retrofit
         PostApiClient postApiClient = new PostApiClient(getContext());
-        CookieManager cookieManager = FragmentUpload.getCookieManager();
         postApiClient.getFeed(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
