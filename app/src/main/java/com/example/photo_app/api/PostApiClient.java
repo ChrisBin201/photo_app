@@ -40,6 +40,11 @@ public class PostApiClient {
         getPostImgs.enqueue(callback);
     }
 
+    public void getPostsByKeyword(String keyword, Callback<ArrayList<Post>> callback) {
+        Call<ArrayList<Post>> getPostsByKeyword = postService.getPostsByKeyword(keyword);
+        getPostsByKeyword.enqueue(callback);
+    }
+
     public void uploadPost(Map<String, Object> body, Callback<Post> callback) {
 
         Call<Post> uploadPost = postService.uploadPost(body);
