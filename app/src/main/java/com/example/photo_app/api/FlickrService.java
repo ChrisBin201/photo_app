@@ -33,7 +33,7 @@ public interface FlickrService {
     Call<PhotoURLResponse> getImageUrlByImgId(@Query("photo_id") String id);
 
     @GET("api/v1/photo/getByUserId")
-    Call<PhotosByUserResponse> getImageByUserId();
+    Call<PhotosByUserResponse> getImageByUserId(@Query(("user_id")) String userId);
 
     @GET("/api/v1/photoset/getByUserid")
     Call<PhotosetsResponse> getPhotosetByUserId();
