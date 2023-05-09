@@ -21,14 +21,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photo_app.ProfileViewActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.adapter.PostAdapter;
 import com.example.photo_app.adapter.RecycleViewAdapterUser;
 import com.example.photo_app.api.ApiClient;
+import com.example.photo_app.api.FlickrService;
+import com.example.photo_app.api.GoClient;
+import com.example.photo_app.api.PostApiClient;
 import com.example.photo_app.api.UserService;
+import com.example.photo_app.model.Post;
 import com.example.photo_app.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.ItemListener {
 
@@ -99,6 +107,36 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                             @Override
                             public void onFailure(Call<List<User>> call, Throwable t) {
                                 Log.d("TAG", "onFailure: " + t.getMessage());
+                            }
+                        });
+                    }
+                    else if (object.equals("Post")) {
+                        PostApiClient postApiClient = new PostApiClient(getContext());
+                        postApiClient.getPostsByKeyword(keyword, new Callback<ArrayList<Post>>() {
+                            @Override
+                            public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
+                                if (response.isSuccessful()) {
+                                    ArrayList<Post> posts = response.body();
+                                    // Initialize RecyclerView and its adapter
+                                    RecyclerView recyclerView = view.findViewById(R.id.recycleViewItemPost);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                                    FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
+                                    PostAdapter postAdapter = new PostAdapter(posts, postApiClient, getActivity(), flickrService);
+                                    recyclerView.setAdapter(postAdapter);
+                                    // notify adapter that data has changed
+                                    postAdapter.notifyDataSetChanged();
+
+                                } else {
+                                    // handle request errors depending on status code
+                                    Log.e("Error 1: ", response.message());
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                                // handle failure
+                                Log.e("Error: ", t.getMessage());
                             }
                         });
                     }
