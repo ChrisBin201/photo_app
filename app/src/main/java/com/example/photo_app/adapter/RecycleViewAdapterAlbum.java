@@ -64,7 +64,7 @@ public class RecycleViewAdapterAlbum extends RecyclerView.Adapter<RecycleViewAda
 //        holder.ivImage.setImageResource(R.drawable.ic_android);
         holder.txtTitleAlbum.setText(urlImage.getTitle());
         Glide.with(holder.itemView)
-                .load(urlImage.getUrl())
+                .load(urlImage.getPrimary())
                 .placeholder(R.drawable.ic_android)
                 .error(R.drawable.ic_android)
                 .into(holder.img_primary_album);
