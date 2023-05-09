@@ -68,6 +68,7 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                     RadioButton radioButton = radioGroup.findViewById(scopeID);
                     String object = radioButton.getText().toString();
                     String keyword = etSearch.getText().toString();
+                    Log.d("TAG", "onClick: " + object + " " + keyword);
                     if (keyword.isEmpty()) keyword = " ";
                     if (object.equals("User")) {
                         adapter = new RecycleViewAdapterUser();
