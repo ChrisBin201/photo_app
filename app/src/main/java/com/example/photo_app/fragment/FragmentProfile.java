@@ -76,28 +76,40 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         recyclerView = view.findViewById(R.id.recycleView);
 
         recycleViewAdapterImage = new RecycleViewAdapterImage(getActivity(), this);
-
-//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
-        List<PhotosByUserResponse.photoByUserResponse> list = new ArrayList<>();
-       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
-       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
-       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
-       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
-//       urlImage.setPhotos(list);
-        recycleViewAdapterImage.setList(list);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setAdapter(recycleViewAdapterImage);
-
-        recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+        final List<PhotosByUserResponse.photoByUserResponse>[] list = new List[]{new ArrayList<>()};
+        FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
+        Call<PhotosByUserResponse> call = flickrService.getImageByUserId();
+        call.enqueue(new Callback<PhotosByUserResponse>() {
             @Override
-            public void OnItemClick(View view, int p) {
+            public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
+                System.out.println("Success get photo by response");
+                list[0] = response.body().getPhotos();
+                recycleViewAdapterImage.setList(list[0]);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                recyclerView.setAdapter(recycleViewAdapterImage);
+
+                recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+                    @Override
+                    public void OnItemClick(View view, int p) {
 //                String id = list.get(p).getId();
 ////                Intent intent = new Intent(getActivity(), ImageActivity.class);
 //                intent.putExtra("id", id);
 //                startActivity(intent);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
+                System.out.println("Failed get photo by response");
             }
         });
+//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
+
+//       urlImage.setPhotos(list);
+
+
 
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
