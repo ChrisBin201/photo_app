@@ -18,7 +18,7 @@ import com.example.photo_app.R;
 import java.util.ArrayList;
 
 // view pager adapter for showing list of images
-class ImagePagerAdapter extends RecyclerView.Adapter<ImageViewHolder> {
+public class ImagePagerAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     private ArrayList<String> imageUrls;
 
     public ImagePagerAdapter(ArrayList<String> imageUrls) {

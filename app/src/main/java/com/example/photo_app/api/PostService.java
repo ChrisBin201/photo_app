@@ -24,4 +24,6 @@ public interface PostService {
     @POST("upload")
     Call<Post>  uploadPost(@Body Map<String, Object> body);
 
+    @GET("get_list_urlImage/{user_id}")
+    Call<ArrayList<String>> getListUrlImage(@Path("user_id") int user_id);
 }
