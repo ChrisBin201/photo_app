@@ -22,7 +22,7 @@ public class PostApiClient {
     public PostApiClient(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl("http://10.0.2.2:5000/api/")
-                .baseUrl("http://192.168.1.4:9000/api/")
+                .baseUrl(" https://4x6dhdewqcxwk32ykeseerrmda.srv.us/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -38,6 +38,11 @@ public class PostApiClient {
     public void getPostImgs(int postId, Callback<ArrayList<PostImgs>> callback) {
         Call<ArrayList<PostImgs>> getPostImgs = postService.getPostImgs(postId);
         getPostImgs.enqueue(callback);
+    }
+
+    public void getPostsByKeyword(String keyword, Callback<ArrayList<Post>> callback) {
+        Call<ArrayList<Post>> getPostsByKeyword = postService.getPostsByKeyword(keyword);
+        getPostsByKeyword.enqueue(callback);
     }
 
     public void uploadPost(Map<String, Object> body, Callback<Post> callback) {
