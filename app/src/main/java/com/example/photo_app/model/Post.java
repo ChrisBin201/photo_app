@@ -1,5 +1,7 @@
 package com.example.photo_app.model;
 
+import com.example.photo_app.model.call.flickr.PhotoURLResponse;
+
 import java.util.ArrayList;
 
 public class Post {
@@ -8,7 +10,7 @@ public class Post {
     private String created_at;
     private int user_id;
 
-    private ArrayList<String> imageUrls;
+    private ArrayList<PhotoURLResponse> imageUrls;
 
     public Post(int id, String caption, String created_at, int user_id) {
         this.id = id;
@@ -55,11 +57,11 @@ public class Post {
         return "id: " + id + " caption: " + caption + " created_at: " + created_at + " user_id: " + user_id;
     }
 
-    public ArrayList<String> getImageUrls() {
+    public ArrayList<PhotoURLResponse> getImageUrls() {
         return imageUrls;
     }
 
-    public void setImageUrls(ArrayList<String> imageUrls) {
+    public void setImageUrls(ArrayList<PhotoURLResponse> imageUrls) {
         this.imageUrls = imageUrls;
     }
 }

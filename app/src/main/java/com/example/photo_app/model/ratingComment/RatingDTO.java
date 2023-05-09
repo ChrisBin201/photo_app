@@ -5,19 +5,19 @@ public class RatingDTO {
     private int rating;
     private String message;
     private Long userId;
-    private Long photoId;
+    private String photoId;
 
     public RatingDTO() {
     }
 
-    public RatingDTO(int rating, String message, Long userId, Long photoId) {
+    public RatingDTO(int rating, String message, Long userId, String photoId) {
         this.rating = rating;
         this.message = message;
         this.userId = userId;
         this.photoId = photoId;
     }
 
-    public RatingDTO(Long id, int rating, String message, Long userId, Long photoId) {
+    public RatingDTO(Long id, int rating, String message, Long userId, String photoId) {
         this.id = id;
         this.rating = rating;
         this.message = message;
@@ -57,11 +57,11 @@ public class RatingDTO {
         this.userId = userId;
     }
 
-    public Long getPhotoId() {
+    public String getPhotoId() {
         return photoId;
     }
 
-    public void setPhotoId(Long photoId) {
+    public void setPhotoId(String photoId) {
         this.photoId = photoId;
     }
 }

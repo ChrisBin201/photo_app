@@ -41,6 +41,7 @@ public class RatingListAdapter extends BaseAdapter {
     private List<Rating> ratings;
     private RatingService ratingService;
     private Long userId = null;
+    private String photoId = null;
 
     public RatingListAdapter(@NonNull Context context, @NonNull List<Rating> objects, Button btnRate) {
 //        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -56,6 +57,14 @@ public class RatingListAdapter extends BaseAdapter {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 
     private static class ViewHolder{
@@ -150,7 +159,7 @@ public class RatingListAdapter extends BaseAdapter {
                             Log.d(TAG, "onResponse: success delete");
 //                            notifyDataSetChanged();
                             Log.d(TAG, "getAllRatings: getting a list of all ratings");
-                            ratingService.getAllByPhoto(String.valueOf(1)).enqueue(new Callback<MessageResponse<List<Rating>>>() {
+                            ratingService.getAllByPhoto(photoId).enqueue(new Callback<MessageResponse<List<Rating>>>() {
 
                                 @Override
                                 public void onResponse(Call<MessageResponse<List<Rating>>> call, Response<MessageResponse<List<Rating>>> response) {
@@ -206,7 +215,7 @@ public class RatingListAdapter extends BaseAdapter {
                             Log.d(TAG, "onResponse: success delete");
 //                            notifyDataSetChanged();
                             Log.d(TAG, "getAllRatings: getting a list of all ratings");
-                            ratingService.getAllByPhoto(String.valueOf(1)).enqueue(new Callback<MessageResponse<List<Rating>>>() {
+                            ratingService.getAllByPhoto(photoId).enqueue(new Callback<MessageResponse<List<Rating>>>() {
 
                                 @Override
                                 public void onResponse(Call<MessageResponse<List<Rating>>> call, Response<MessageResponse<List<Rating>>> response) {

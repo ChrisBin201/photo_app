@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import com.example.photo_app.R;
 import com.example.photo_app.api.ApiClient;
 import com.example.photo_app.api.ratingComment.CommentService;
+import com.example.photo_app.fragment.ratingComment.FragmentViewComments;
 import com.example.photo_app.model.ratingComment.Comment;
 import com.example.photo_app.model.ratingComment.CommentDTO;
 import com.example.photo_app.model.ratingComment.MessageResponse;
@@ -38,6 +39,15 @@ public class CommentListAdapter extends BaseAdapter {
     private List<Comment> comments;
     private CommentService commentService;
     private Long userId = null;
+    private String photoId = null;
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
+    }
 
     //    public CommentListAdapter(@NonNull Context context, @LayoutRes int resource,
 //                              @NonNull List<Comment> objects) {
@@ -146,7 +156,8 @@ public class CommentListAdapter extends BaseAdapter {
 //                            comments.remove(position);
 //                            notifyDataSetChanged();
                             Log.d(TAG, "getAllComments: getting a list of all comments");
-                            commentService.getAllByPhoto(String.valueOf(1)).enqueue(new Callback<MessageResponse<List<Comment>>>() {
+
+                            commentService.getAllByPhoto(photoId).enqueue(new Callback<MessageResponse<List<Comment>>>() {
 
                                 @Override
                                 public void onResponse(Call<MessageResponse<List<Comment>>> call, Response<MessageResponse<List<Comment>>> response) {
@@ -203,7 +214,7 @@ public class CommentListAdapter extends BaseAdapter {
 //                            comments.remove(position);
 //                            notifyDataSetChanged();
                             Log.d(TAG, "getAllComments: getting a list of all comments");
-                            commentService.getAllByPhoto(String.valueOf(1)).enqueue(new Callback<MessageResponse<List<Comment>>>() {
+                            commentService.getAllByPhoto(photoId).enqueue(new Callback<MessageResponse<List<Comment>>>() {
 
                                 @Override
                                 public void onResponse(Call<MessageResponse<List<Comment>>> call, Response<MessageResponse<List<Comment>>> response) {

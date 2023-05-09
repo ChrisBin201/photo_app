@@ -4,10 +4,10 @@ public class CommentDTO {
     private Long id;
     private String message;
     private Long userId;
-    private Long photoId;
+    private String photoId;
     private Long postId;
 
-    public CommentDTO(Long id, String message, Long userId, Long photoId, Long postId) {
+    public CommentDTO(Long id, String message, Long userId, String photoId, Long postId) {
         this.id = id;
         this.message = message;
         this.userId = userId;
@@ -18,7 +18,7 @@ public class CommentDTO {
     public CommentDTO() {
     }
 
-    public CommentDTO(String message, Long userId, Long photoId, Long postId) {
+    public CommentDTO(String message, Long userId, String photoId, Long postId) {
         this.message = message;
         this.userId = userId;
         this.photoId = photoId;
@@ -49,11 +49,11 @@ public class CommentDTO {
         this.userId = userId;
     }
 
-    public Long getPhotoId() {
+    public String getPhotoId() {
         return photoId;
     }
 
-    public void setPhotoId(Long photoId) {
+    public void setPhotoId(String photoId) {
         this.photoId = photoId;
     }
 

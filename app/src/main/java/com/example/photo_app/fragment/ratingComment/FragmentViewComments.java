@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.photo_app.ImageActivity;
 import com.example.photo_app.R;
 import com.example.photo_app.adapter.ratingComment.CommentListAdapter;
 import com.example.photo_app.api.ApiClient;
@@ -42,6 +43,8 @@ public class FragmentViewComments extends Fragment {
     private List<Comment> mComments;
 
     private CommentService commentService;
+    private String photoId;
+
 
 
     @Nullable
@@ -55,6 +58,8 @@ public class FragmentViewComments extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         commentService = ApiClient.createService(CommentService.class, getContext());
+        photoId = getArguments().getString("photo_id");
+        mBackArrow = (ImageView) view.findViewById(R.id.backArrow);
         eComment = view.findViewById(R.id.comment);
         ivCheckMark = (ImageView) view.findViewById(R.id.ivPostComment);
         listView = (ListView) view.findViewById(R.id.listView);
@@ -62,6 +67,7 @@ public class FragmentViewComments extends Fragment {
 //        adapter = new CommentListAdapter(this,
 //                R.layout.layout_comment, mComments);
         adapter = new CommentListAdapter(getActivity(), mComments);
+        adapter.setPhotoId(photoId);
         listView.setAdapter(adapter);
 
         ivCheckMark.setOnClickListener(v -> {
@@ -77,6 +83,13 @@ public class FragmentViewComments extends Fragment {
             }
         });
         getAllComments();
+
+        mBackArrow.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: navigating back");
+            getActivity().getSupportFragmentManager().popBackStack();
+            ImageActivity context = (ImageActivity) getContext();
+            context.showLayout();
+        });
     }
 
     private void closeKeyboard(){
@@ -100,7 +113,7 @@ public class FragmentViewComments extends Fragment {
 
         CommentDTO comment = new CommentDTO();
         comment.setMessage(message);
-        comment.setPhotoId((long)1);
+        comment.setPhotoId(photoId);
         commentService.create(comment).enqueue(new Callback<MessageResponse<Comment>>() {
 
             @Override
@@ -137,9 +150,9 @@ public class FragmentViewComments extends Fragment {
 //                .setValue(comment);
 
     }
-    private void getAllComments() {
+    public void getAllComments() {
         Log.d(TAG, "getAllComments: getting a list of all comments");
-        commentService.getAllByPhoto(String.valueOf(1)).enqueue(new Callback<MessageResponse<List<Comment>>>() {
+        commentService.getAllByPhoto(photoId).enqueue(new Callback<MessageResponse<List<Comment>>>() {
 
             @Override
             public void onResponse(Call<MessageResponse<List<Comment>>> call, Response<MessageResponse<List<Comment>>> response) {

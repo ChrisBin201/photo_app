@@ -59,14 +59,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.tvTime.setText(post.getCreated_at());
 
 
-        ArrayList<String> imageUrls = post.getImageUrls();
+        ArrayList<PhotoURLResponse> imageUrls = post.getImageUrls();
         if (imageUrls == null || imageUrls.isEmpty()) {
             postApiClient.getPostImgs(post.getId(), new Callback<ArrayList<PostImgs>>() {
                 @Override
                 public void onResponse(Call<ArrayList<PostImgs>> call, Response<ArrayList<PostImgs>> response) {
                     if (response.isSuccessful()) {
                         ArrayList<PostImgs> imgs = response.body();
-                        ArrayList<String> imageUrls = new ArrayList<>();
+                        ArrayList<PhotoURLResponse> imageUrls = new ArrayList<>();
                         int totalImgs = imgs.size();
                         for (int i = 0; i < totalImgs; i++) {
 
@@ -80,9 +80,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                                 public void onResponse(Call<PhotoURLResponse> call, Response<PhotoURLResponse> response) {
                                     if (response.isSuccessful()) {
                                         System.out.println("SUCCESS");
-                                        String imgUrl = response.body().getUrl();
-                                        if(!imgUrl.equals(""))
-                                            imageUrls.add(imgUrl);
+//                                        String imgUrl = response.body().getUrl();
+//                                        if(!imgUrl.equals(""))
+//                                            imageUrls.add(imgUrl);
+                                        PhotoURLResponse photo = response.body();
+                                        if(photo != null) {
+                                            imageUrls.add(photo);
+                                        }
+                                        else {
+                                            System.out.println("photo is null");
+                                        }
                                     }
                                     else {
                                         System.out.println("FAILED with status code: " + response.code());

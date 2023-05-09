@@ -9,13 +9,13 @@ public class Comment extends Auditable implements Serializable {
     private Long userId;
     private String username;
 
-    private Long photoId;
+    private String photoId;
     private Long postId;
 
     public Comment() {
     }
 
-    public Comment(LocalDateTime createdDate, LocalDateTime lastModifiedDate, long id, String message, Long userId, String username, Long photoId, Long postId) {
+    public Comment(LocalDateTime createdDate, LocalDateTime lastModifiedDate, long id, String message, Long userId, String username, String photoId, Long postId) {
         super(createdDate, lastModifiedDate);
         this.id = id;
         this.message = message;
@@ -49,11 +49,11 @@ public class Comment extends Auditable implements Serializable {
         this.userId = userId;
     }
 
-    public Long getPhotoId() {
+    public String getPhotoId() {
         return photoId;
     }
 
-    public void setPhotoId(Long photoId) {
+    public void setPhotoId(String photoId) {
         this.photoId = photoId;
     }
 

@@ -30,18 +30,18 @@ public interface CommentService {
 //    CommentService COMMENT_SERVICE = ApiConfig.retrofit.create(CommentService.class);
 
 
-    @POST("comment")
+    @POST("rating-comment/comment")
     Call<MessageResponse<Comment>> create(@Body CommentDTO comment);
 
-    @GET("comment/post/{id}")
+    @GET("rating-comment/comment/post/{id}")
     Call<MessageResponse<List<Comment>>> getAllByPost(@Path("id") String id);
-    @GET("comment/photo/{id}")
+    @GET("rating-comment/comment/photo/{id}")
     Call<MessageResponse<List<Comment>>> getAllByPhoto(@Path("id") String id);
 
-    @PUT("comment")
+    @PUT("rating-comment/comment")
     Call<MessageResponse<Comment>> update(@Body CommentDTO comment);
 
-    @DELETE("comment/{id}")
+    @DELETE("rating-comment/comment/{id}")
     Call<MessageResponse<String>> deleteById(@Path("id") String id);
 
 }

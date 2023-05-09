@@ -2,9 +2,26 @@ package com.example.photo_app.model.call.flickr;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PhotoURLResponse {
+import java.io.Serializable;
+
+public class PhotoURLResponse implements Serializable {
     @SerializedName("url")
     private String url;
+    @SerializedName("id")
+    private String id;
+
+    public PhotoURLResponse(String url, String id) {
+        this.url = url;
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public PhotoURLResponse(){}
 

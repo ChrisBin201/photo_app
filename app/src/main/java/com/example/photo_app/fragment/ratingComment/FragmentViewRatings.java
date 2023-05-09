@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.photo_app.ImageActivity;
 import com.example.photo_app.R;
 import com.example.photo_app.adapter.ratingComment.RatingListAdapter;
 import com.example.photo_app.api.ApiClient;
@@ -39,6 +40,7 @@ import retrofit2.Response;
 public class FragmentViewRatings extends Fragment {
     private static final String TAG = "ViewRatingsFragment";
     private ListView listView;
+    private Context mContext;
     private ImageView mBackArrow;
     private Button btnRate;
     private boolean rated;
@@ -48,6 +50,7 @@ public class FragmentViewRatings extends Fragment {
     private List<Rating> mRatings;
 
     private RatingService ratingService;
+    private String photoId;
 
 
     @Nullable
@@ -61,14 +64,17 @@ public class FragmentViewRatings extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ratingService = ApiClient.createService(RatingService.class, getContext());
+        photoId = getArguments().getString("photo_id");
 //        Rating = view.findViewById(R.id.comment);
 //        ivCheckMark = (ImageView) view.findViewById(R.id.ivPostRating);
         btnRate = view.findViewById(R.id.btnRate);
+        mBackArrow = (ImageView) view.findViewById(R.id.backArrow);
         listView = (ListView) view.findViewById(R.id.listView);
         mRatings = new ArrayList<>();
 //        adapter = new RatingListAdapter(this,
 //                R.layout.layout_comment, mRatings);
         adapter = new RatingListAdapter(getActivity(), mRatings,btnRate);
+        adapter.setPhotoId(photoId);
         listView.setAdapter(adapter);
         //Add new rating
         btnRate.setOnClickListener(v -> {
@@ -87,7 +93,7 @@ public class FragmentViewRatings extends Fragment {
                 RatingDTO ratingDTO = new RatingDTO();
                 ratingDTO.setMessage(editView.getText().toString());
                 ratingDTO.setRating((int)ratingBar.getRating());
-                ratingDTO.setPhotoId((long)1);
+                ratingDTO.setPhotoId(photoId);
                 ratingService.create(ratingDTO).enqueue(new Callback<MessageResponse<Rating>>() {
                     @Override
                     public void onResponse(Call<MessageResponse<Rating>> call, Response<MessageResponse<Rating>> response) {
@@ -116,12 +122,20 @@ public class FragmentViewRatings extends Fragment {
         });
 
         getAllRatings();
+
+        mBackArrow.setOnClickListener(v -> {
+            Log.d(TAG, "onClick: navigating back");
+            getActivity().getSupportFragmentManager().popBackStack();
+            ImageActivity context = (ImageActivity) getContext();
+            context.showLayout();
+
+        });
     }
 
     //call api
-    private void getAllRatings() {
+    public void getAllRatings() {
         Log.d(TAG, "getAllRatings: getting a list of all ratings");
-        ratingService.getAllByPhoto(String.valueOf(1)).enqueue(new Callback<MessageResponse<List<Rating>>>() {
+        ratingService.getAllByPhoto(photoId).enqueue(new Callback<MessageResponse<List<Rating>>>() {
 
             @Override
             public void onResponse(Call<MessageResponse<List<Rating>>> call, Response<MessageResponse<List<Rating>>> response) {

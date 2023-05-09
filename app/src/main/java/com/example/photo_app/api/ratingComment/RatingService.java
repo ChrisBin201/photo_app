@@ -18,15 +18,15 @@ import retrofit2.http.Path;
 
 public interface RatingService {
 
-    @POST("rating")
+    @POST("rating-comment/rating")
     Call<MessageResponse<Rating>> create(@Body RatingDTO rating);
 
-    @GET("rating/photo/{id}")
+    @GET("rating-comment/rating/photo/{id}")
     Call<MessageResponse<List<Rating>>> getAllByPhoto(@Path("id") String id);
 
-    @PUT("rating")
+    @PUT("rating-comment/rating")
     Call<MessageResponse<Rating>> update(@Body RatingDTO rating);
 
-    @DELETE("rating/{id}")
+    @DELETE("rating-comment/rating/{id}")
     Call<MessageResponse<String>> deleteById(@Path("id") String id);
 }

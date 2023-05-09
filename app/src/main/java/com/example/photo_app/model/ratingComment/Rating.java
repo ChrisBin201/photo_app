@@ -10,12 +10,12 @@ public class Rating extends Auditable implements Serializable {
     private int rating;
     private Long userId;
     private String username;
-    private Long photoId;
+    private String photoId;
 
     public Rating() {
     }
 
-    public Rating(LocalDateTime createdDate, LocalDateTime lastModifiedDate, long id, String message, int rating, Long userId, String username, Long photoId) {
+    public Rating(LocalDateTime createdDate, LocalDateTime lastModifiedDate, long id, String message, int rating, Long userId, String username, String photoId) {
         super(createdDate, lastModifiedDate);
         this.id = id;
         this.message = message;
@@ -65,11 +65,11 @@ public class Rating extends Auditable implements Serializable {
         this.username = username;
     }
 
-    public Long getPhotoId() {
+    public String getPhotoId() {
         return photoId;
     }
 
-    public void setPhotoId(Long photoId) {
+    public void setPhotoId(String photoId) {
         this.photoId = photoId;
     }
 }
