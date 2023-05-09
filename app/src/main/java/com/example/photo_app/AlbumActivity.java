@@ -1,7 +1,11 @@
 package com.example.photo_app;
 
 
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +20,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.example.photo_app.adapter.RecycleViewAdapterAlbum;
 import com.example.photo_app.api.FlickrService;
 import com.example.photo_app.api.GoClient;
 import com.example.photo_app.fragment.FragmentUpload;
@@ -34,56 +40,36 @@ import retrofit2.http.Query;
 
 public class AlbumActivity extends AppCompatActivity {
     private ArrayList<PhotosetResponse> photosetsResponse;
+    private RecycleViewAdapterAlbum recycleViewAdapterAlbum;
+    private RecyclerView recycleView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
-
-        GridView albumGridView = findViewById(R.id.album_gridView);
+        recycleViewAdapterAlbum = new RecycleViewAdapterAlbum();
+        recycleView = findViewById(R.id.album_gridView);
+        ImageView backArrow = findViewById(R.id.backArrow);
+        backArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlbumActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
 
 
         photosetsResponse = (ArrayList<PhotosetResponse>) bundle.get("photosets_response");
-
-        AlbumAdapter albumAdapter = new AlbumAdapter();
-        albumGridView.setAdapter(albumAdapter);
+        recycleViewAdapterAlbum.setList(photosetsResponse);
+        recycleView.setAdapter(recycleViewAdapterAlbum);
+        GridLayoutManager manager = new GridLayoutManager(getApplicationContext(), 3, RecyclerView.VERTICAL, false);
+        recycleView.setLayoutManager(manager);
+        recycleView.setAdapter(recycleViewAdapterAlbum);
     }
 
-    public class AlbumAdapter extends BaseAdapter{
-
-        @Override
-        public int getCount() {
-            return photosetsResponse.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return photosetsResponse.get(position);
-        }
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater().inflate(R.layout.item_album,null);
-
-            ImageView img = view.findViewById(R.id.img_primary_album);
-            TextView title = view.findViewById(R.id.txtTitleAlbum);
-            String url = "";
-            title.setText(photosetsResponse.get(position).getTitle());
-//            Glide.with(holder.itemView)
-//                    .load(imageUrl)
-//                    .placeholder(R.drawable.ic_android)
-//                    .error(R.drawable.ic_android)
-//                    .into(holder.imageView);
-            return view;
-        }
-    }
     public String getImageUrlByImageId(String id) {
         String imgUrl = "";
         CookieManager cookieManager = FragmentUpload.getCookieManager();

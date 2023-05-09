@@ -2,6 +2,7 @@ package com.example.photo_app.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
     private TextView tvFollowers, tvFollowing, tvName, tvAddress;
     private LinearLayout lnListFollowers, lnListFollowing;
     private RecyclerView recyclerView;
+    private final List<PhotosByUserResponse.photoByUserResponse>[] list = new List[]{new ArrayList<>()};
 
 
     @Nullable
@@ -59,7 +61,6 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -76,40 +77,46 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         recyclerView = view.findViewById(R.id.recycleView);
 
         recycleViewAdapterImage = new RecycleViewAdapterImage(getActivity(), this);
-        final List<PhotosByUserResponse.photoByUserResponse>[] list = new List[]{new ArrayList<>()};
-        FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
-        Call<PhotosByUserResponse> call = flickrService.getImageByUserId();
-        call.enqueue(new Callback<PhotosByUserResponse>() {
-            @Override
-            public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
-                System.out.println("Success get photo by response");
-                list[0] = response.body().getPhotos();
-                recycleViewAdapterImage.setList(list[0]);
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
-                recyclerView.setLayoutManager(gridLayoutManager);
-                recyclerView.setAdapter(recycleViewAdapterImage);
 
-                recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
-                    @Override
-                    public void OnItemClick(View view, int p) {
+        // kiểm tra xem sharepreference flirck bằng true hay false
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
+        boolean isLogin = sharedPreferences.getBoolean("flickr", false);
+
+        if (isLogin == false) {
+            Toast.makeText(getActivity(), "sdsdsdsdsd", Toast.LENGTH_SHORT).show();
+        } else {
+            FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
+            Call<PhotosByUserResponse> call = flickrService.getImageByUserId("id");
+            call.enqueue(new Callback<PhotosByUserResponse>() {
+                @Override
+                public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
+                    System.out.println("Success get photo by response");
+                    list[0] = response.body().getPhotos();
+                    recycleViewAdapterImage.setList(list[0]);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+                    recyclerView.setAdapter(recycleViewAdapterImage);
+
+                    recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+                        @Override
+                        public void OnItemClick(View view, int p) {
 //                String id = list.get(p).getId();
 ////                Intent intent = new Intent(getActivity(), ImageActivity.class);
 //                intent.putExtra("id", id);
 //                startActivity(intent);
-                    }
-                });
-            }
+                        }
+                    });
+                }
 
-            @Override
-            public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
-                System.out.println("Failed get photo by response");
-            }
-        });
+                @Override
+                public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
+                    System.out.println("Failed get photo by response");
+                }
+            });
 //        PhotosByUserResponse urlImage = new PhotosByUserResponse();
 
 //       urlImage.setPhotos(list);
-
-
+        }
 
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -145,8 +152,8 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         Context context = getContext();
 
         UserService userService = ApiClient.createService(UserService.class, context);
-        Call<List<User>> call = userService.getUsersByFollowing();
-        call.enqueue(new Callback<List<User>>() {
+        Call<List<User>> listCall = userService.getUsersByFollowing();
+        listCall.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
@@ -163,8 +170,8 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
             }
         });
 
-        call = userService.getUsersByFollowed();
-        call.enqueue(new Callback<List<User>>() {
+        listCall = userService.getUsersByFollowed();
+        listCall.enqueue(new Callback<List<User>>() {
             @Override
             public void onResponse(Call<List<User>> call, Response<List<User>> response) {
                 if (response.isSuccessful()) {
@@ -220,7 +227,48 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
     @Override
     public void onResume() {
         super.onResume();
+        recycleViewAdapterImage = new RecycleViewAdapterImage(getActivity(), this);
+        // kiểm tra xem sharepreference flirck bằng true hay false
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
+        boolean isLogin = sharedPreferences.getBoolean("flickr", false);
+        String userID = sharedPreferences.getString("user_id", "");
 
+        if (isLogin == false) {
+            Toast.makeText(getActivity(), "sdsdsdsdsd", Toast.LENGTH_SHORT).show();
+        } else {
+            FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
+            Call<PhotosByUserResponse> call = flickrService.getImageByUserId(userID);
+            call.enqueue(new Callback<PhotosByUserResponse>() {
+                @Override
+                public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
+                    System.out.println("Success get photo by response");
+                    list[0] = response.body().getPhotos();
+
+                    recycleViewAdapterImage.setList(list[0]);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+                    recyclerView.setAdapter(recycleViewAdapterImage);
+
+                    recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+                        @Override
+                        public void OnItemClick(View view, int p) {
+//                String id = list.get(p).getId();
+////                Intent intent = new Intent(getActivity(), ImageActivity.class);
+//                intent.putExtra("id", id);
+//                startActivity(intent);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
+                    System.out.println("Failed get photo by response");
+                }
+            });
+//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
+
+//       urlImage.setPhotos(list);
+        }
         Context context = getContext();
 
         UserService userService = ApiClient.createService(UserService.class, context);

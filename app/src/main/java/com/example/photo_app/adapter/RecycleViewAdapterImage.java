@@ -1,10 +1,10 @@
 package com.example.photo_app.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.photo_app.R;
 import com.example.photo_app.fragment.FragmentProfile;
-import com.example.photo_app.model.User;
 import com.example.photo_app.model.call.flickr.PhotosByUserResponse;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ public class RecycleViewAdapterImage extends RecyclerView.Adapter<RecycleViewAda
     private List<PhotosByUserResponse.photoByUserResponse> urlImages;
     private RecycleViewAdapterImage.ItemListener itemListener;
 
-    public RecycleViewAdapterImage() {
+    public RecycleViewAdapterImage(Context context, List<PhotosByUserResponse.photoByUserResponse>[] list) {
     }
 
     public RecycleViewAdapterImage(FragmentActivity activity, FragmentProfile fragmentProfile) {
@@ -56,12 +55,12 @@ public class RecycleViewAdapterImage extends RecyclerView.Adapter<RecycleViewAda
     @Override
     public void onBindViewHolder(@NonNull HomeViewHolder holder, int position) {
         PhotosByUserResponse.photoByUserResponse urlImage = urlImages.get(position);
-        holder.ivImage.setImageResource(R.drawable.ic_android);
-//        Glide.with(holder.itemView)
-//                .load(urlImage.getUrl())
-//                .placeholder(R.drawable.ic_android)
-//                .error(R.drawable.ic_android)
-//                .into(holder.ivImage);
+//        holder.ivImage.setImageResource(R.drawable.ic_android);
+        Glide.with(holder.itemView)
+                .load(urlImage.getUrl())
+                .placeholder(R.drawable.ic_android)
+                .error(R.drawable.ic_android)
+                .into(holder.ivImage);
     }
 
     @Override

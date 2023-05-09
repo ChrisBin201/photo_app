@@ -2,7 +2,9 @@ package com.example.photo_app.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -73,6 +75,8 @@ public class FragmentUpload extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         ArrayList<String> selectedImages = new ArrayList<>();
         Button btnSelect = view.findViewById(R.id.btnSelectPicture);
         Button btnUpload = view.findViewById(R.id.btnUpload);
@@ -127,6 +131,14 @@ public class FragmentUpload extends Fragment {
 
                         ViewGroup parent =(ViewGroup) webView.getParent();
                         parent.removeView(webView);
+
+                        // update SharedPreference flickr = true\
+                        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("flickr", true);
+                        editor.putString("user_id", userID[0]);
+                        editor.apply();
+
                     } catch (MalformedURLException e) {
                         throw new RuntimeException(e);
                     }

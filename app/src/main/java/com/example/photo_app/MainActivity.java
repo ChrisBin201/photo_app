@@ -1,4 +1,5 @@
 package com.example.photo_app;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -32,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // khởi tạo shared preferences flickr = false
+        SharedPreferences sharedPreferences = getSharedPreferences("flickr", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("flickr", false);
+        editor.apply();
+
         setContentView(R.layout.activity_main);
         bottomNavi = findViewById(R.id.bottomNavi);
         viewPager = findViewById(R.id.viewPager);
