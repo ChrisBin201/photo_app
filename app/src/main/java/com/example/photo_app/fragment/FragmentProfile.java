@@ -15,6 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photo_app.AlbumActivity;
 import com.example.photo_app.EditProfileActivity;
@@ -22,6 +25,8 @@ import com.example.photo_app.FollowedViewActivity;
 import com.example.photo_app.FollowingViewActivity;
 import com.example.photo_app.LoginActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.adapter.ImagePagerAdapter;
+import com.example.photo_app.adapter.RecycleViewAdapterImage;
 import com.example.photo_app.api.ApiClient;
 import com.example.photo_app.api.FlickrService;
 import com.example.photo_app.api.GoClient;
@@ -37,13 +42,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentProfile extends Fragment {
+public class FragmentProfile extends Fragment implements RecycleViewAdapterImage.ItemListener {
 
     private User user;
+    private RecycleViewAdapterImage recycleViewAdapterImage;
     private Button btnEditProfile;
     private Button btnAlbums;
     private TextView tvFollowers, tvFollowing, tvName, tvAddress;
     private LinearLayout lnListFollowers, lnListFollowing;
+    private RecyclerView recyclerView;
+
 
     @Nullable
     @Override
@@ -64,6 +72,26 @@ public class FragmentProfile extends Fragment {
         lnListFollowers = view.findViewById(R.id.lnListFollowers);
         lnListFollowing = view.findViewById(R.id.lnListFollowing);
         btnAlbums = view.findViewById(R.id.btnAlbums);
+        recyclerView = view.findViewById(R.id.recycleView);
+
+        List<String> urlImage = new ArrayList<>();
+        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
+        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
+        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
+        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
+
+        recycleViewAdapterImage.setList(urlImage);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(recycleViewAdapterImage);
+
+        recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+            @Override
+            public void OnItemClick(View view, int p) {
+
+            }
+        });
+
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +110,7 @@ public class FragmentProfile extends Fragment {
                 photosetsResponseCall.enqueue(new Callback<PhotosetsResponse>() {
                     @Override
                     public void onResponse(Call<PhotosetsResponse> call, Response<PhotosetsResponse> response) {
-                        System.out.println("SUCCESS with size of "+ response.body().getResponse().size());
+                        System.out.println("SUCCESS with size of " + response.body().getResponse().size());
                         ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
 
                         startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
@@ -229,5 +257,10 @@ public class FragmentProfile extends Fragment {
                 Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void OnItemClick(View view, int p) {
+
     }
 }
