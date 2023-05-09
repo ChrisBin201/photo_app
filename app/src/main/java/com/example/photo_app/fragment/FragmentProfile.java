@@ -32,6 +32,7 @@ import com.example.photo_app.api.FlickrService;
 import com.example.photo_app.api.GoClient;
 import com.example.photo_app.api.UserService;
 import com.example.photo_app.model.User;
+import com.example.photo_app.model.call.flickr.PhotosByUserResponse;
 import com.example.photo_app.model.call.flickr.PhotosetsResponse;
 
 import java.net.CookieManager;
@@ -74,13 +75,16 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         btnAlbums = view.findViewById(R.id.btnAlbums);
         recyclerView = view.findViewById(R.id.recycleView);
 
-        List<String> urlImage = new ArrayList<>();
-        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
-        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
-        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
-        urlImage.add("https://i.pinimg.com/originals/0f/6a/6a/0f6a6a0b6b5b6b5b6b5b6b5b6b5b6b5b6b5b6b5.jpg");
+        recycleViewAdapterImage = new RecycleViewAdapterImage(getActivity(), this);
 
-        recycleViewAdapterImage.setList(urlImage);
+//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
+        List<PhotosByUserResponse.photoByUserResponse> list = new ArrayList<>();
+       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
+       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
+       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
+       list.add(new PhotosByUserResponse.photoByUserResponse("id", "url"));
+//       urlImage.setPhotos(list);
+        recycleViewAdapterImage.setList(list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
         recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setAdapter(recycleViewAdapterImage);
@@ -88,7 +92,10 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
             @Override
             public void OnItemClick(View view, int p) {
-
+//                String id = list.get(p).getId();
+////                Intent intent = new Intent(getActivity(), ImageActivity.class);
+//                intent.putExtra("id", id);
+//                startActivity(intent);
             }
         });
 

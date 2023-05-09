@@ -7,36 +7,42 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.photo_app.R;
+import com.example.photo_app.fragment.FragmentProfile;
 import com.example.photo_app.model.User;
+import com.example.photo_app.model.call.flickr.PhotosByUserResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RecycleViewAdapterImage extends RecyclerView.Adapter<RecycleViewAdapterImage.HomeViewHolder> {
-    private List<String> urlImages;
+    private List<PhotosByUserResponse.photoByUserResponse> urlImages;
     private RecycleViewAdapterImage.ItemListener itemListener;
 
     public RecycleViewAdapterImage() {
+    }
+
+    public RecycleViewAdapterImage(FragmentActivity activity, FragmentProfile fragmentProfile) {
     }
 
     public void setItemListener(RecycleViewAdapterImage.ItemListener itemListener) {
         this.itemListener = itemListener;
     }
 
-    public RecycleViewAdapterImage(String viewType) {
+    public RecycleViewAdapterImage(PhotosByUserResponse.photoByUserResponse viewType) {
         urlImages = new ArrayList<>();
     }
 
-    public void setList(List<String> urlImages) {
+    public void setList(List<PhotosByUserResponse.photoByUserResponse> urlImages) {
         this.urlImages = urlImages;
         notifyDataSetChanged();
     }
 
-    public String getItem(int p) {
+    public PhotosByUserResponse.photoByUserResponse getItem(int p) {
         return urlImages.get(p);
     }
 
@@ -49,12 +55,13 @@ public class RecycleViewAdapterImage extends RecyclerView.Adapter<RecycleViewAda
 
     @Override
     public void onBindViewHolder(@NonNull HomeViewHolder holder, int position) {
-        String urlImage = urlImages.get(position);
-        Glide.with(holder.itemView)
-                .load(urlImage)
-                .placeholder(R.drawable.ic_android)
-                .error(R.drawable.ic_android)
-                .into(holder.ivImage);
+        PhotosByUserResponse.photoByUserResponse urlImage = urlImages.get(position);
+        holder.ivImage.setImageResource(R.drawable.ic_android);
+//        Glide.with(holder.itemView)
+//                .load(urlImage.getUrl())
+//                .placeholder(R.drawable.ic_android)
+//                .error(R.drawable.ic_android)
+//                .into(holder.ivImage);
     }
 
     @Override
