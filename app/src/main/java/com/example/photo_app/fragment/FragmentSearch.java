@@ -119,12 +119,10 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                                 if (response.isSuccessful()) {
                                     ArrayList<Post> posts = response.body();
                                     // Initialize RecyclerView and its adapter
-                                    RecyclerView recyclerView = view.findViewById(R.id.recycleViewItemPost);
-                                    recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+                                    recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
                                     FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
                                     PostAdapter postAdapter = new PostAdapter(posts, postApiClient, getActivity(), flickrService);
-                                    recyclerView.setAdapter(postAdapter);
+                                    recycleView.setAdapter(postAdapter);
                                     // notify adapter that data has changed
                                     postAdapter.notifyDataSetChanged();
 
@@ -137,7 +135,7 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                             @Override
                             public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
                                 // handle failure
-                                Log.e("Error: ", t.getMessage());
+                                Log.e("Errorwtf: ", t.getMessage());
                             }
                         });
                     }

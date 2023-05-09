@@ -18,8 +18,9 @@ public interface PostService {
     @GET("get_feed")
     Call<ArrayList<Post>> getFeed();
 
-    @GET("/get_posts_by_keyword/{keyword}")
-    Call<ArrayList<Post>> getPostsByKeyword(@Path("keyword")String keyword);
+    @GET("get_posts_by_keyword")
+    Call<ArrayList<Post>> getPostsByKeyword(@Query("keyword") String keyword);
+
 
     @GET("get_post_imgs/{post_id}")
     Call<ArrayList<PostImgs>> getPostImgs(@Path("post_id") int post_id);
