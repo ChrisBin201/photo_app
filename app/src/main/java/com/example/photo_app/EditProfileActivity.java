@@ -70,7 +70,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 String addressStr = address.getText().toString();
                 String usernameStr = username.getText().toString();
 
-                User userCall = new User(user.getId(), usernameStr, user.getPassword(), fullNameStr, addressStr);
+                User userCall = new User(user.getId(), usernameStr, user.getPassword(), fullNameStr, addressStr, user.getAuthProvider());
 
                 Call<Message> callUpdateUser = userService.updateUser(userCall);
                 callUpdateUser.enqueue(new retrofit2.Callback<Message>() {
