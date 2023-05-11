@@ -126,7 +126,7 @@ public class RatingListAdapter extends BaseAdapter {
 //        }else{
 //            holder.timestamp.setText("today");
 //        }
-        holder.timestamp.setText(rating.getLastModifiedDate()!=null ?rating.getLastModifiedDate().toString():"null day");
+        holder.timestamp.setText(rating.getLastUpdate()!=null ?rating.getLastUpdate().toString():"null day");
 
         //set the username and profile image
         holder.username.setText(rating.getUsername() != null? rating.getUsername() : "null user");
@@ -166,6 +166,7 @@ public class RatingListAdapter extends BaseAdapter {
                                     if(response.isSuccessful()){
                                         Log.d(TAG, "onResponse: get all ratings success");
                                         List<Rating> ratings = response.body().getData();
+                                        ratings.sort((c1,c2) -> (int) (c2.getId() - c1.getId()));
                                         updateRatings(ratings);
                                         notifyDataSetChanged();
                                         for(Rating rating : ratings){
@@ -222,6 +223,7 @@ public class RatingListAdapter extends BaseAdapter {
                                     if(response.isSuccessful()){
                                         Log.d(TAG, "onResponse: get all ratings success");
                                         List<Rating> ratings = response.body().getData();
+                                        ratings.sort((c1,c2) -> (int) (c2.getId() - c1.getId()));
                                         updateRatings(ratings);
                                         notifyDataSetChanged();
                                         for(Rating rating : ratings){

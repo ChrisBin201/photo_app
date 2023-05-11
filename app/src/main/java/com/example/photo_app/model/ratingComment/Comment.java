@@ -3,7 +3,7 @@ package com.example.photo_app.model.ratingComment;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Comment extends Auditable implements Serializable {
+public class Comment  implements Serializable {
     private long id;
     private String message;
     private Long userId;
@@ -11,18 +11,20 @@ public class Comment extends Auditable implements Serializable {
 
     private String photoId;
     private Long postId;
+    private String lastUpdate;
 
     public Comment() {
     }
 
-    public Comment(LocalDateTime createdDate, LocalDateTime lastModifiedDate, long id, String message, Long userId, String username, String photoId, Long postId) {
-        super(createdDate, lastModifiedDate);
+    public Comment(LocalDateTime createdDate, LocalDateTime lastModifiedDate, long id, String message, Long userId, String username, String photoId, Long postId, String lastUpdate) {
+//        super(createdDate, lastModifiedDate);
         this.id = id;
         this.message = message;
         this.userId = userId;
         this.username = username;
         this.photoId = photoId;
         this.postId = postId;
+        this.lastUpdate = lastUpdate;
     }
 
     public long getId() {
@@ -71,5 +73,13 @@ public class Comment extends Auditable implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(String lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

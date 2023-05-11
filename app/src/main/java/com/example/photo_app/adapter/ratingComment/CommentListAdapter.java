@@ -130,7 +130,7 @@ public class CommentListAdapter extends BaseAdapter {
 //        }else{
 //            holder.timestamp.setText("today");
 //        }
-        holder.timestamp.setText(comment.getLastModifiedDate()!=null ?comment.getLastModifiedDate().toString():"null day");
+        holder.timestamp.setText(comment.getLastUpdate()!=null ?comment.getLastUpdate().toString():"null day");
 
         //set the username and profile image
         holder.username.setText(comment.getUsername() != null? comment.getUsername() : "null user");
@@ -164,6 +164,7 @@ public class CommentListAdapter extends BaseAdapter {
                                     if(response.isSuccessful()){
                                         Log.d(TAG, "onResponse: get all comment success");
                                         List<Comment> comments = response.body().getData();
+                                        comments.sort((c1,c2) -> (int) (c2.getId() - c1.getId()));
                                         for(Comment comment : comments){
                                             Log.d(TAG, "onResponse: comment: " + comment.getMessage());
                                         }
@@ -221,6 +222,7 @@ public class CommentListAdapter extends BaseAdapter {
                                     if(response.isSuccessful()){
                                         Log.d(TAG, "onResponse: get all comment success");
                                         List<Comment> comments = response.body().getData();
+                                        comments.sort((c1,c2) -> (int) (c2.getId() - c1.getId()));
                                         for(Comment comment : comments){
                                             Log.d(TAG, "onResponse: comment: " + comment.getMessage());
                                         }

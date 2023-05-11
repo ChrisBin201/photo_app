@@ -145,6 +145,7 @@ public class FragmentViewRatings extends Fragment {
                 if(response.isSuccessful()){
                     Log.d(TAG, "onResponse: get all ratings success");
                     List<Rating> ratings = response.body().getData();
+                    ratings.sort((c1,c2) -> (int) (c2.getId() - c1.getId()));
                     Long clientId = response.body().getClient();
                     adapter.setUserId(clientId);
                     adapter.updateRatings(ratings);

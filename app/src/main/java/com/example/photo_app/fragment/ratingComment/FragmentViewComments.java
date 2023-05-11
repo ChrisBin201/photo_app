@@ -161,6 +161,7 @@ public class FragmentViewComments extends Fragment {
                 if(response.isSuccessful()){
                     Log.d(TAG, "onResponse: get all comment success");
                     List<Comment> comments = response.body().getData();
+                    comments.sort((c1,c2) -> (int) (c2.getId() - c1.getId()));
                     Long clientId = response.body().getClient();
                     for(Comment comment : comments){
                         Log.d(TAG, "onResponse: comment: " + comment.getMessage());
