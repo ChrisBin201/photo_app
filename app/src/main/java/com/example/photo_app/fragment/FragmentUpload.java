@@ -2,6 +2,7 @@ package com.example.photo_app.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.photo_app.LoginActivity;
 import com.example.photo_app.R;
 import com.example.photo_app.adapter.ImageListAdapter;
 import com.example.photo_app.adapter.PostAdapter;
@@ -163,6 +165,9 @@ public class FragmentUpload extends Fragment {
         btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 // upload images to server
                 if(selectedFiles.size()>0) {
 //                    MultipartBody.Builder requestBodyBuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -197,6 +202,7 @@ public class FragmentUpload extends Fragment {
                                 @Override
                                 public void onResponse(Call<Post> call, Response<Post> response) {
                                    if(response.isSuccessful()){
+                                       progressDialog.dismiss();
                                        Post post = response.body();
                                        Log.d("Upload success:", post.toString());
                                        Toast.makeText(getActivity(), "Post uploaded successfully", Toast.LENGTH_SHORT).show();
@@ -208,12 +214,14 @@ public class FragmentUpload extends Fragment {
                                            adapter.notifyDataSetChanged();
                                        }
                                    } else {
+                                       progressDialog.dismiss();
                                         Log.d("Upload error:", response.errorBody().toString());
                                    }
                                 }
 
                                 @Override
                                 public void onFailure(Call<Post> call, Throwable t) {
+                                    progressDialog.dismiss();
                                     Log.e("Upload error:", t.getMessage());
                                 }
                             });
@@ -223,6 +231,7 @@ public class FragmentUpload extends Fragment {
 
                         @Override
                         public void onFailure(Call<PhotoIdResponse> call, Throwable t) {
+                            progressDialog.dismiss();
                             Log.e("Upload error:", t.getMessage());
                         }
                     });

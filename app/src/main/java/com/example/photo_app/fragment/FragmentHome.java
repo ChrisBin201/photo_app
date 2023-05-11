@@ -1,5 +1,6 @@
 package com.example.photo_app.fragment;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,6 +45,9 @@ public class FragmentHome extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+        progressDialog.show(); // hiển thị ProgressDialog
         // call get api to retrieve following ids using retrofit
         PostApiClient postApiClient = new PostApiClient(getContext());
         postApiClient.getFeed(new Callback<ArrayList<Post>>() {
@@ -58,6 +62,7 @@ public class FragmentHome extends Fragment {
                     FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
                     PostAdapter postAdapter = new PostAdapter(posts, postApiClient, getActivity(), flickrService);
                     recyclerView.setAdapter(postAdapter);
+                    progressDialog.dismiss();
                     // notify adapter that data has changed
                     postAdapter.notifyDataSetChanged();
 
