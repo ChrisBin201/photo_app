@@ -139,7 +139,9 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                         } else {
-                            Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, response.code() + " "+ response.message(), Toast.LENGTH_SHORT).show();
+
                         }
                     }
 
@@ -279,7 +281,9 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, response.code() + " "+ response.message(), Toast.LENGTH_SHORT).show();
+
                     }
                 }
 

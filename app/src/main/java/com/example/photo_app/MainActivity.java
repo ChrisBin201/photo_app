@@ -9,6 +9,9 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.photo_app.adapter.ViewPagerAdapter;
+import com.example.photo_app.api.ApiClient;
+import com.example.photo_app.api.UserService;
+import com.example.photo_app.model.User;
 import com.example.photo_app.model.notification.NotificationModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.EventListener;
@@ -20,15 +23,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNavi;
 
     private ViewPager viewPager;
     List<NotificationModel> notifications = new ArrayList<>();
+    private UserService userService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        userService = ApiClient.createService(UserService.class, this);
 
         // khởi tạo shared preferences flickr = false
         SharedPreferences sharedPreferences = getSharedPreferences("flickr", MODE_PRIVATE);
@@ -96,45 +105,62 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
-
-        // Listen for metadata changes to the document.
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        CollectionReference collectionRef  = db.collection("notifications");
-        db.collection("notifications")
-                .whereEqualTo("objectReceiveId", 3)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        userService.getUserFromJWT().enqueue(new Callback<User>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.w("MainActivity", "Listen failed.", error);
-                    return;
-                }
+            public void onResponse(Call<User> call, Response<User> response) {
+                User u = response.body();
 
-                List<NotificationModel> notificationModels = new ArrayList<>();
-                for (QueryDocumentSnapshot doc : value) {
+                // Listen for metadata changes to the document.
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        CollectionReference collectionRef  = db.collection("notifications");
+                db.collection("notifications")
+                        .whereEqualTo("objectReceiveId", u.getId())
+                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                if (error != null) {
+                                    Log.w("MainActivity", "Listen failed.", error);
+                                    return;
+                                }
+
+                                List<NotificationModel> notificationModels = new ArrayList<>();
+                                for (QueryDocumentSnapshot doc : value) {
 //                    if (doc.get("name") != null) {
-                    NotificationModel notification = new NotificationModel(
-                            doc.getLong("id"),
-                            doc.getLong("objectReceiveId"),
-                            doc.getString("type"),
-                            doc.getLong("objectSendId"),
-                            doc.getString("content"),
-                            doc.getString("photoId"),
-                            doc.getString("status")
-                    );
-                    notificationModels.add(notification);
+                                    NotificationModel notification = new NotificationModel(
+                                            doc.getLong("id"),
+                                            doc.getLong("objectReceiveId"),
+                                            doc.getString("type"),
+                                            doc.getLong("objectSendId"),
+                                            doc.getString("content"),
+                                            doc.getString("photoId"),
+                                            doc.getString("status")
+                                    );
+                                    notificationModels.add(notification);
 //                    }
-                }
-                notifications.clear();
-                notifications.addAll(notificationModels);
-                adapter.setmNotifications(notifications);
-                bottomNavi.getOrCreateBadge(R.id.mNoti).setNumber(notifications.size());
-                Log.d("MainActivity", "Current notifications : " + notifications.size());
+                                }
+                                notifications.clear();
+                                notifications.addAll(notificationModels);
+                                adapter.setmNotifications(notifications);
+                                if(notifications.size() > 0)
+                                    bottomNavi.getOrCreateBadge(R.id.mNoti).setNumber(notifications.size());
+                                else bottomNavi.removeBadge(R.id.mNoti);
+                                Log.d("MainActivity", "Current notifications : " + notifications.size());
+                            }
+                        });
+
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
             }
         });
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
 }
 
 

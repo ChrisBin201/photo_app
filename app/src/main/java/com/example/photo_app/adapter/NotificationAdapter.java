@@ -20,6 +20,7 @@ import com.example.photo_app.R;
 import com.example.photo_app.adapter.ratingComment.CommentListAdapter;
 import com.example.photo_app.api.ApiClient;
 import com.example.photo_app.api.FlickrService;
+import com.example.photo_app.api.GoClient;
 import com.example.photo_app.api.ratingComment.CommentService;
 import com.example.photo_app.model.call.flickr.PhotoURLResponse;
 import com.example.photo_app.model.notification.NotificationModel;
@@ -92,10 +93,11 @@ public class NotificationAdapter extends BaseAdapter {
 //        holder.comment.setText(getItem(position).getComment());
         NotificationModel noti = (NotificationModel) getItem(position);
         holder.noti_mess.setText(noti.getContent());
-
+//        if(noti.getStatus())
         holder.detail.setOnClickListener(view -> {
-            FlickrService flickrService = ApiClient.createService(FlickrService.class, mContext);
+            FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, mContext);
             Call<PhotoURLResponse> photoCall = flickrService.getImageUrlByImgId(noti.getPhotoId());
+            Log.i(TAG, "getView: "+noti.getPhotoId());
             photoCall.enqueue(new Callback<PhotoURLResponse>() {
                 @Override
                 public void onResponse(Call<PhotoURLResponse> call, Response<PhotoURLResponse> response) {
@@ -107,6 +109,9 @@ public class NotificationAdapter extends BaseAdapter {
                         intent.putExtra("image", photoURLResponse);
                         view.getContext().startActivity(intent);
                     }
+                    else {
+                        Log.e(TAG, "onResponse: " + response.code()+" "+response.message());
+                    }
                 }
 
                 @Override
@@ -114,6 +119,12 @@ public class NotificationAdapter extends BaseAdapter {
                     Log.e(TAG, "onFailure: " + t.getMessage());
                 }
             });
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         });
 
 

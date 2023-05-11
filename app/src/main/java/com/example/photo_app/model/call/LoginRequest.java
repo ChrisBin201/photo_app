@@ -1,20 +1,20 @@
 package com.example.photo_app.model.call;
 
 public class LoginRequest {
-    private String email;
+    private String username ;
     private String password;
 
     public LoginRequest(String email, String password) {
-        this.email = email;
+        this.username = email;
         this.password = password;
     }
 
     public String getUsername() {
-        return email;
+        return username;
     }
 
     public void setUsername(String username) {
-        this.email = username;
+        this.username = username;
     }
 
     public String getPassword() {
