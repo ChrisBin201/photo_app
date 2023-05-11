@@ -155,7 +155,7 @@ public class FragmentUpload extends Fragment {
             @Override
             public void onClick(View v) {
                 webView.setVisibility(View.VISIBLE);
-                String url = baseURL+"flickr/auth";
+                String url = baseURL+"/flickr/auth";
                 webView.loadUrl(url);
                 loginWithFlickr.setVisibility(View.GONE);
             }

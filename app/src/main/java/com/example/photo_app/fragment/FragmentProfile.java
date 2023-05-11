@@ -208,10 +208,12 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
                 photosetsResponseCall.enqueue(new Callback<PhotosetsResponse>() {
                     @Override
                     public void onResponse(Call<PhotosetsResponse> call, Response<PhotosetsResponse> response) {
-                        System.out.println("SUCCESS with size of " + response.body().getResponse().size());
-                        ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
+                       if(response.isSuccessful()){
+                           System.out.println("SUCCESS with size of " + response.body().getResponse().size());
+                           ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
 
-                        startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
+                           startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
+                       }
                     }
 
                     @Override

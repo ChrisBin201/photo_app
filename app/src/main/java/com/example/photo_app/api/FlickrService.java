@@ -21,7 +21,7 @@ import retrofit2.http.Query;
 
 public interface FlickrService {
     @Multipart
-    @POST("flickr/upload_img")
+    @POST("/flickr/upload_img")
     Call<PhotoIdResponse> uploadImages(@Part List<MultipartBody.Part> files);
 
     // trả đầy đủ
@@ -32,7 +32,7 @@ public interface FlickrService {
     @GET("/api/v1/photo/getById")
     Call<PhotoURLResponse> getImageUrlByImgId(@Query("photo_id") String id);
 
-    @GET("api/v1/photo/getByUserId")
+    @GET("/api/v1/photo/getByUserId")
     Call<PhotosByUserResponse> getImageByUserId(@Query(("user_id")) String userId);
 
     @GET("/api/v1/photoset/getByUserid")
