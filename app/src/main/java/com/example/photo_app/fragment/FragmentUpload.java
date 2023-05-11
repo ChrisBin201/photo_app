@@ -99,9 +99,29 @@ public class FragmentUpload extends Fragment {
         webView.getSettings().setAllowFileAccess(true);
 
         cookieManager = new CookieManager();
+        String baseURL = GoClient.getBaseUrl();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
+        String userId = sharedPreferences.getString("flickr_user_id", "");
+        String username = sharedPreferences.getString("flickr_user_username", "");
+        String fullname = sharedPreferences.getString("flickr_user_fullname", "");
+        String requestToken = sharedPreferences.getString("flickr_request_token", "");
+        String requestTokenSecret = sharedPreferences.getString("flickr_request_token_secret", "");
+        String accessToken = sharedPreferences.getString("flickr_access_token", "");
+        String accessSecret = sharedPreferences.getString("flickr_access_secret", "");
+
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_user_id", userId));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_user_username", username));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_user_fullname", fullname));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_request_token", requestToken));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_request_token_secret", requestTokenSecret));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_token", accessToken));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_secret", accessSecret));
+
+
         FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
 
-        String baseURL = GoClient.getBaseUrl();
+
         String callbackUrlContains  = "redirect-callback";
         final String[] userID = new String[1];
         webView.setWebViewClient(new WebViewClient(){
@@ -136,6 +156,15 @@ public class FragmentUpload extends Fragment {
                         // update SharedPreference flickr = true\
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                        editor.putString("flickr_user_id", userID[0]);
+                        editor.putString("flickr_user_username", query_pairs.get("username"));
+                        editor.putString("flickr_user_fullname", query_pairs.get("fullname"));
+                        editor.putString("flickr_request_token", query_pairs.get("flickr_request_token"));
+                        editor.putString("flickr_request_token_secret", query_pairs.get("flickr_request_token_secret"));
+                        editor.putString("flickr_access_token", query_pairs.get("flickr_access_token"));
+                        editor.putString("flickr_access_secret", query_pairs.get("flickr_access_secret"));
+
                         editor.putBoolean("flickr", true);
                         editor.putString("user_id", userID[0]);
                         editor.apply();

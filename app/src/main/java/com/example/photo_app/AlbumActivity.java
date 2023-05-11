@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.view.View;
@@ -30,6 +32,8 @@ import com.example.photo_app.model.call.flickr.PhotosetsResponse;
 import com.example.photo_app.model.call.flickr.PhotosetsResponse.PhotosetResponse;
 
 import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -72,7 +76,25 @@ public class AlbumActivity extends AppCompatActivity {
 
     public String getImageUrlByImageId(String id) {
         String imgUrl = "";
-        CookieManager cookieManager = FragmentUpload.getCookieManager();
+        SharedPreferences sharedPreferences = getSharedPreferences("flickr", Context.MODE_PRIVATE);
+        String userID = sharedPreferences.getString("flickr_user_id", "");
+        String username = sharedPreferences.getString("flickr_user_username", "");
+        String fullname = sharedPreferences.getString("flickr_user_fullname", "");
+        String requestToken = sharedPreferences.getString("flickr_request_token", "");
+        String requestTokenSecret = sharedPreferences.getString("flickr_request_token_secret", "");
+        String accessToken = sharedPreferences.getString("flickr_access_token", "");
+        String accessSecret = sharedPreferences.getString("flickr_access_secret", "");
+        String baseURL = GoClient.getBaseUrl();
+
+        CookieManager cookieManager = new CookieManager();
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_user_id", userID));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_user_username", username));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_user_fullname", fullname));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_request_token", requestToken));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_request_token_secret", requestTokenSecret));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_token", accessToken));
+        cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_secret", accessSecret));
+
         FlickrService flickrService = GoClient.createService(FlickrService.class, getApplicationContext(), cookieManager);
         Call<PhotoSourceResponse> call = flickrService.getImageUrl(id);
         call.enqueue(new Callback<PhotoSourceResponse>() {
