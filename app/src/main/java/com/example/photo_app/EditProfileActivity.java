@@ -1,6 +1,7 @@
 package com.example.photo_app;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,27 @@ public class EditProfileActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         authProvider = findViewById(R.id.authProvider);
 
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfileActivity.this, "Email cannot be changed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfileActivity.this, "Username cannot be changed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        authProvider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfileActivity.this, "Auth Provider cannot be changed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Context context = getApplicationContext();
 
         UserService userService = ApiClient.createService(UserService.class, context);
@@ -70,6 +92,9 @@ public class EditProfileActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(EditProfileActivity.this);
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 String fullNameStr = fullname.getText().toString();
                 String addressStr = address.getText().toString();
                 String usernameStr = username.getText().toString();
@@ -83,11 +108,13 @@ public class EditProfileActivity extends AppCompatActivity {
                         Message message = response.body();
                         Toast.makeText(EditProfileActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+                        progressDialog.dismiss();
                         startActivity(intent);
                     }
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
+                        progressDialog.dismiss();
                         Log.d("Error", t.getMessage());
                     }
                 });
