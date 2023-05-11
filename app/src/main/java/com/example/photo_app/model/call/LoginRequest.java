@@ -1,11 +1,11 @@
 package com.example.photo_app.model.call;
 
 public class LoginRequest {
-    private String username ;
+    private String username;
     private String password;
 
-    public LoginRequest(String email, String password) {
-        this.username = email;
+    public LoginRequest(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 

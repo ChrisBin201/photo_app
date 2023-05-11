@@ -14,9 +14,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.photo_app.api.ApiClient;
+import com.example.photo_app.api.PostService;
 import com.example.photo_app.fragment.ratingComment.FragmentViewComments;
 import com.example.photo_app.fragment.ratingComment.FragmentViewRatings;
 import com.example.photo_app.model.call.flickr.PhotoURLResponse;
+
+import java.util.Map;
 
 public class ImageActivity extends AppCompatActivity {
     private static final String TAG = "ImageActivity";
@@ -26,6 +30,7 @@ public class ImageActivity extends AppCompatActivity {
     private Button btnRating, btnComment;
     private FrameLayout mFrameLayout;
     private RelativeLayout mRelativeLayout;
+    private long userId;
 
     private void add(Fragment fg, String tag, String name){
         transaction = manager.beginTransaction();
@@ -61,6 +66,8 @@ public class ImageActivity extends AppCompatActivity {
 
 
         PhotoURLResponse photo = (PhotoURLResponse)getIntent().getSerializableExtra("image");
+        userId = getIntent().getLongExtra("user_id", 0);
+        Log.i(TAG, "onCreate: " +userId);
         Glide.with(image)
                 .load(photo.getUrl())
                 .placeholder(R.drawable.ic_android)
@@ -77,6 +84,7 @@ public class ImageActivity extends AppCompatActivity {
 //            args.putParcelable(getString(R.string.photo), photo);
 //            args.putString(getString(R.string.home_activity), getString(R.string.home_activity));
             args.putString("photo_id", photo.getId());
+            args.putLong("user_id", userId);
             fragment.setArguments(args);
             add(fragment, "comment", "comment");
             hideLayout();
@@ -88,11 +96,11 @@ public class ImageActivity extends AppCompatActivity {
 //            args.putParcelable(getString(R.string.photo), photo);
 //            args.putString(getString(R.string.home_activity), getString(R.string.home_activity));
             args.putString("photo_id", photo.getId());
+            args.putLong("user_id", userId);
             fragment.setArguments(args);
             add(fragment, "rating", "rating");
             hideLayout();
         });
-
 
 
     }

@@ -30,4 +30,6 @@ public interface PostService {
 
     @GET("get_list_urlImage/{user_id}")
     Call<ArrayList<String>> getListUrlImage(@Path("user_id") int user_id);
+    @GET("get_image_owner/{photo_id}")
+    Call<Map<String,Long>> getImageOwner(@Path("photo_id") String photo_id);
 }

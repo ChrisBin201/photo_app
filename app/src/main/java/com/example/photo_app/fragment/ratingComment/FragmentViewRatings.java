@@ -51,6 +51,8 @@ public class FragmentViewRatings extends Fragment {
 
     private RatingService ratingService;
     private String photoId;
+    private Long userId;
+
 
 
     @Nullable
@@ -65,6 +67,7 @@ public class FragmentViewRatings extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ratingService = ApiClient.createService(RatingService.class, getContext());
         photoId = getArguments().getString("photo_id");
+        userId = getArguments().getLong("user_id");
 //        Rating = view.findViewById(R.id.comment);
 //        ivCheckMark = (ImageView) view.findViewById(R.id.ivPostRating);
         btnRate = view.findViewById(R.id.btnRate);
@@ -94,7 +97,7 @@ public class FragmentViewRatings extends Fragment {
                 ratingDTO.setMessage(editView.getText().toString());
                 ratingDTO.setRating((int)ratingBar.getRating());
                 ratingDTO.setPhotoId(photoId);
-                ratingService.create(ratingDTO).enqueue(new Callback<MessageResponse<Rating>>() {
+                ratingService.create(ratingDTO,userId.toString()).enqueue(new Callback<MessageResponse<Rating>>() {
                     @Override
                     public void onResponse(Call<MessageResponse<Rating>> call, Response<MessageResponse<Rating>> response) {
                         if(response.isSuccessful()){

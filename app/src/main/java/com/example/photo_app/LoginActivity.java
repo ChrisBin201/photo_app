@@ -2,6 +2,7 @@ package com.example.photo_app;
 
 import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +39,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -94,14 +96,21 @@ public class LoginActivity extends AppCompatActivity {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+                progressDialog.dismiss();
             }
         });
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 String username = editTextUsername.getText().toString();
                 String password = editTextPassword.getText().toString();
                 LoginRequest loginRequest = new LoginRequest(username, password);
@@ -134,19 +143,18 @@ public class LoginActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("token", loginResponse.getAccessToken());
                             editor.apply();
-
-
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            progressDialog.dismiss();
                             startActivity(intent);
                         } else {
-//                            Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(LoginActivity.this, response.code() + " "+ response.message(), Toast.LENGTH_SHORT).show();
-
+                            progressDialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
+                        progressDialog.dismiss();
                         Toast.makeText(LoginActivity.this, "Unable to call server", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -166,6 +174,9 @@ public class LoginActivity extends AppCompatActivity {
         loginButtonFB.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 // Lấy access token sử dụng LoginResult
                 AccessToken accessToken = loginResult.getAccessToken();
                 // Sử dụng access token để lấy thông tin người dùng
@@ -176,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
 //                AccessToken accessToken1 = AccessToken.getCurrentAccessToken();
 //                boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
 //                Toast.makeText(MainActivity.this, isLoggedIn? accessToken.toString():"false", Toast.LENGTH_SHORT).show();
-                Map<String,String> tokenMap =  new HashMap<>();
+                Map<String, String> tokenMap = new HashMap<>();
                 tokenMap.put("accessToken", accessToken.getToken());
                 UserService AuthService = ApiClient.createService(UserService.class, getApplicationContext());
                 AuthService.authService.checkLoginFB(tokenMap).enqueue(new Callback<LoginResponse>() {
@@ -194,16 +205,20 @@ public class LoginActivity extends AppCompatActivity {
                             System.out.println(loginResponse.getAccessToken());
 
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            progressDialog.dismiss();
                             startActivity(intent);
                         } else {
+                            progressDialog.dismiss();
 //                            Toast.makeText(MainActivity.this, "sai thông tin", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(LoginActivity.this, response.code() + " "+ response.message(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<LoginResponse> call, Throwable t) {
-                        Toast.makeText(LoginActivity.this, "không gọi được đến server", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
+//                        Toast.makeText(LoginActivity.this, "không gọi được đến server", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -258,6 +273,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+            progressDialog.show(); // hiển thị ProgressDialog
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String idToken = account.getIdToken();
             Context context = getApplicationContext();
@@ -279,16 +297,17 @@ public class LoginActivity extends AppCompatActivity {
 
 
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        progressDialog.dismiss();
                         startActivity(intent);
                     } else {
-//                        Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(LoginActivity.this, response.code() + " "+ response.message(), Toast.LENGTH_SHORT).show();
-
+                        progressDialog.dismiss();
+                        Toast.makeText(LoginActivity.this, "Wrong username or password", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, "Unable to call server", Toast.LENGTH_SHORT).show();
                 }
             });

@@ -18,8 +18,8 @@ import retrofit2.http.Path;
 
 public interface RatingService {
 
-    @POST("rating-comment/rating")
-    Call<MessageResponse<Rating>> create(@Body RatingDTO rating);
+    @POST("rating-comment/rating/to-user/{id}")
+    Call<MessageResponse<Rating>> create(@Body RatingDTO rating, @Path("id") String id);
 
     @GET("rating-comment/rating/photo/{id}")
     Call<MessageResponse<List<Rating>>> getAllByPhoto(@Path("id") String id);

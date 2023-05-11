@@ -1,5 +1,6 @@
 package com.example.photo_app;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,7 +51,10 @@ public class RegisterActivity extends AppCompatActivity {
         registry_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = new User(null, username.getText().toString(), password.getText().toString(),
+                ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
+                User user = new User(null,null, username.getText().toString(), password.getText().toString(),
                         fullname.getText().toString(), address.getText().toString(), null);
 
                 Context context = getApplicationContext(); // Lấy Context của ứng dụng
@@ -64,14 +68,17 @@ public class RegisterActivity extends AppCompatActivity {
                             Message message = response.body();
                             Toast.makeText(RegisterActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                            progressDialog.dismiss();
                             startActivity(intent);
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Error: Username is already taken!", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
+                        progressDialog.dismiss();
                         Toast.makeText(RegisterActivity.this, "Unable to call server", Toast.LENGTH_SHORT).show();
                     }
                 });

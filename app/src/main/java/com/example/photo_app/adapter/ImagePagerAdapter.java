@@ -17,9 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.photo_app.ImageActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.api.ApiClient;
+import com.example.photo_app.api.PostService;
 import com.example.photo_app.model.call.flickr.PhotoURLResponse;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 // view pager adapter for showing list of images
 public class ImagePagerAdapter extends RecyclerView.Adapter<ImageViewHolder> {
@@ -48,9 +51,26 @@ public class ImagePagerAdapter extends RecyclerView.Adapter<ImageViewHolder> {
                 .into(holder.imageView);
 
         holder.imageItem.setOnClickListener(view -> {
-            Intent intent = new Intent(view.getContext(), ImageActivity.class);
-            intent.putExtra("image", imageUrls.get(position));
-            view.getContext().startActivity(intent);
+            ApiClient.createService(PostService.class,view.getContext()).getImageOwner(imageUrls.get(position).getId()).enqueue(new retrofit2.Callback<Map<String,Long>>() {
+                @Override
+                public void onResponse(retrofit2.Call<Map<String,Long>> call, retrofit2.Response<Map<String,Long>> response) {
+                    if (response.isSuccessful()) {
+                        Map<String,Long> map = response.body();
+                        long userId = map.get("user_id");
+//                        Log.d(TAG, "onResponse: user id: " + userId);
+                        Intent intent = new Intent(view.getContext(), ImageActivity.class);
+                        intent.putExtra("image", imageUrls.get(position));
+                        intent.putExtra("user_id", userId);
+                        view.getContext().startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(retrofit2.Call<Map<String,Long>> call, Throwable t) {
+
+                }
+            });
+
         });
     }
 

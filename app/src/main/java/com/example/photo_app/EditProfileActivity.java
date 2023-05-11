@@ -1,6 +1,7 @@
 package com.example.photo_app;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +29,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private Button btnSubmit, btnBack;
-    private EditText fullname, address, username;
+    private EditText fullname, address, username, email, authProvider;
     private ImageView backArrow;
     private User user;
 
@@ -43,6 +44,29 @@ public class EditProfileActivity extends AppCompatActivity {
         fullname = findViewById(R.id.fullname);
         address = findViewById(R.id.address);
         username = findViewById(R.id.username);
+        email = findViewById(R.id.email);
+        authProvider = findViewById(R.id.authProvider);
+
+        email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfileActivity.this, "Email cannot be changed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfileActivity.this, "Username cannot be changed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        authProvider.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(EditProfileActivity.this, "Auth Provider cannot be changed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         Context context = getApplicationContext();
 
@@ -55,6 +79,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 fullname.setText(user.getFullName());
                 address.setText(user.getAddress());
                 username.setText(user.getUsername());
+                email.setText(user.getEmail());
+                authProvider.setText(user.getAuthProvider());
             }
 
             @Override
@@ -66,11 +92,14 @@ public class EditProfileActivity extends AppCompatActivity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(EditProfileActivity.this);
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 String fullNameStr = fullname.getText().toString();
                 String addressStr = address.getText().toString();
                 String usernameStr = username.getText().toString();
 
-                User userCall = new User(user.getId(), usernameStr, user.getPassword(), fullNameStr, addressStr, user.getAuthProvider());
+                User userCall = new User(user.getId(), user.getEmail(), usernameStr, user.getPassword(), fullNameStr, addressStr, user.getAuthProvider());
 
                 Call<Message> callUpdateUser = userService.updateUser(userCall);
                 callUpdateUser.enqueue(new retrofit2.Callback<Message>() {
@@ -79,11 +108,13 @@ public class EditProfileActivity extends AppCompatActivity {
                         Message message = response.body();
                         Toast.makeText(EditProfileActivity.this, message.getMessage(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EditProfileActivity.this, MainActivity.class);
+                        progressDialog.dismiss();
                         startActivity(intent);
                     }
 
                     @Override
                     public void onFailure(Call<Message> call, Throwable t) {
+                        progressDialog.dismiss();
                         Log.d("Error", t.getMessage());
                     }
                 });

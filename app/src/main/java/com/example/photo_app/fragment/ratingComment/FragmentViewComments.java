@@ -44,6 +44,7 @@ public class FragmentViewComments extends Fragment {
 
     private CommentService commentService;
     private String photoId;
+    private Long userId;
 
 
 
@@ -59,6 +60,7 @@ public class FragmentViewComments extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         commentService = ApiClient.createService(CommentService.class, getContext());
         photoId = getArguments().getString("photo_id");
+        userId = getArguments().getLong("user_id");
         mBackArrow = (ImageView) view.findViewById(R.id.backArrow);
         eComment = view.findViewById(R.id.comment);
         ivCheckMark = (ImageView) view.findViewById(R.id.ivPostComment);
@@ -114,7 +116,7 @@ public class FragmentViewComments extends Fragment {
         CommentDTO comment = new CommentDTO();
         comment.setMessage(message);
         comment.setPhotoId(photoId);
-        commentService.create(comment).enqueue(new Callback<MessageResponse<Comment>>() {
+        commentService.create(comment,userId.toString()).enqueue(new Callback<MessageResponse<Comment>>() {
 
             @Override
             public void onResponse(Call<MessageResponse<Comment>> call, Response<MessageResponse<Comment>> response) {
