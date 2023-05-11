@@ -50,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         registry_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = new User(null, username.getText().toString(), password.getText().toString(),
+                User user = new User(null,null, username.getText().toString(), password.getText().toString(),
                         fullname.getText().toString(), address.getText().toString(), null);
 
                 Context context = getApplicationContext(); // Lấy Context của ứng dụng

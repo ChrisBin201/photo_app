@@ -28,7 +28,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private Button btnSubmit, btnBack;
-    private EditText fullname, address, username;
+    private EditText fullname, address, username, email, authProvider;
     private ImageView backArrow;
     private User user;
 
@@ -43,6 +43,8 @@ public class EditProfileActivity extends AppCompatActivity {
         fullname = findViewById(R.id.fullname);
         address = findViewById(R.id.address);
         username = findViewById(R.id.username);
+        email = findViewById(R.id.email);
+        authProvider = findViewById(R.id.authProvider);
 
         Context context = getApplicationContext();
 
@@ -55,6 +57,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 fullname.setText(user.getFullName());
                 address.setText(user.getAddress());
                 username.setText(user.getUsername());
+                email.setText(user.getEmail());
+                authProvider.setText(user.getAuthProvider());
             }
 
             @Override
@@ -70,7 +74,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 String addressStr = address.getText().toString();
                 String usernameStr = username.getText().toString();
 
-                User userCall = new User(user.getId(), usernameStr, user.getPassword(), fullNameStr, addressStr, user.getAuthProvider());
+                User userCall = new User(user.getId(), user.getEmail(), usernameStr, user.getPassword(), fullNameStr, addressStr, user.getAuthProvider());
 
                 Call<Message> callUpdateUser = userService.updateUser(userCall);
                 callUpdateUser.enqueue(new retrofit2.Callback<Message>() {

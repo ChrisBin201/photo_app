@@ -77,78 +77,6 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         recyclerView = view.findViewById(R.id.recycleView);
 
         recycleViewAdapterImage = new RecycleViewAdapterImage(getActivity(), this);
-
-        // kiểm tra xem sharepreference flirck bằng true hay false
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
-        boolean isLogin = sharedPreferences.getBoolean("flickr", false);
-
-        if (isLogin == false) {
-            Toast.makeText(getActivity(), "sdsdsdsdsd", Toast.LENGTH_SHORT).show();
-        } else {
-            FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
-            Call<PhotosByUserResponse> call = flickrService.getImageByUserId("id");
-            call.enqueue(new Callback<PhotosByUserResponse>() {
-                @Override
-                public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
-                    System.out.println("Success get photo by response");
-                    list[0] = response.body().getPhotos();
-                    recycleViewAdapterImage.setList(list[0]);
-                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
-                    recyclerView.setLayoutManager(gridLayoutManager);
-                    recyclerView.setAdapter(recycleViewAdapterImage);
-
-                    recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
-                        @Override
-                        public void OnItemClick(View view, int p) {
-//                String id = list.get(p).getId();
-////                Intent intent = new Intent(getActivity(), ImageActivity.class);
-//                intent.putExtra("id", id);
-//                startActivity(intent);
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
-                    System.out.println("Failed get photo by response");
-                }
-            });
-//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
-
-//       urlImage.setPhotos(list);
-        }
-
-
-        btnEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        btnAlbums.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CookieManager cookieManager = FragmentUpload.getCookieManager();
-                FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
-                Call<PhotosetsResponse> photosetsResponseCall = flickrService.getPhotosetByUserId();
-                photosetsResponseCall.enqueue(new Callback<PhotosetsResponse>() {
-                    @Override
-                    public void onResponse(Call<PhotosetsResponse> call, Response<PhotosetsResponse> response) {
-                        System.out.println("SUCCESS with size of " + response.body().getResponse().size());
-                        ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
-
-                        startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
-                    }
-
-                    @Override
-                    public void onFailure(Call<PhotosetsResponse> call, Throwable t) {
-                        System.out.println("FAILED");
-                    }
-                });
-            }
-        });
         Context context = getContext();
 
         UserService userService = ApiClient.createService(UserService.class, context);
@@ -220,6 +148,77 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
                 Intent intent = new Intent(getActivity(), FollowingViewActivity.class);
                 intent.putExtra("user", user);
                 startActivity(intent);
+            }
+        });
+        // kiểm tra xem sharepreference flirck bằng true hay false
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
+        boolean isLogin = sharedPreferences.getBoolean("flickr", false);
+
+        if (isLogin == false) {
+            Toast.makeText(getActivity(), "sdsdsdsds", Toast.LENGTH_SHORT).show();
+        } else {
+            FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
+            Call<PhotosByUserResponse> call = flickrService.getImageByUserId("id");
+            call.enqueue(new Callback<PhotosByUserResponse>() {
+                @Override
+                public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
+                    System.out.println("Success get photo by response");
+                    list[0] = response.body().getPhotos();
+                    recycleViewAdapterImage.setList(list[0]);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+                    recyclerView.setAdapter(recycleViewAdapterImage);
+
+                    recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+                        @Override
+                        public void OnItemClick(View view, int p) {
+//                String id = list.get(p).getId();
+////                Intent intent = new Intent(getActivity(), ImageActivity.class);
+//                intent.putExtra("id", id);
+//                startActivity(intent);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
+                    System.out.println("Failed get photo by response");
+                }
+            });
+//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
+
+//       urlImage.setPhotos(list);
+        }
+
+
+        btnEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnAlbums.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CookieManager cookieManager = FragmentUpload.getCookieManager();
+                FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
+                Call<PhotosetsResponse> photosetsResponseCall = flickrService.getPhotosetByUserId();
+                photosetsResponseCall.enqueue(new Callback<PhotosetsResponse>() {
+                    @Override
+                    public void onResponse(Call<PhotosetsResponse> call, Response<PhotosetsResponse> response) {
+                        System.out.println("SUCCESS with size of " + response.body().getResponse().size());
+                        ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
+
+                        startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
+                    }
+
+                    @Override
+                    public void onFailure(Call<PhotosetsResponse> call, Throwable t) {
+                        System.out.println("FAILED");
+                    }
+                });
             }
         });
     }
