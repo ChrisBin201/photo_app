@@ -73,7 +73,13 @@
                     android:layout_marginHorizontal="10dp"
                     android:layout_weight="1"
                     android:text="Comment" />
-
+                <Button
+                    android:id="@+id/btnDownload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:text="Download" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>

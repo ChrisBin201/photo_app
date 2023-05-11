@@ -5,7 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,7 +31,7 @@ public class ImageActivity extends AppCompatActivity {
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private ImageView btnBack, image;
-    private Button btnRating, btnComment;
+    private Button btnRating, btnComment, btnDownload;
     private FrameLayout mFrameLayout;
     private RelativeLayout mRelativeLayout;
     private long userId;
@@ -60,6 +64,7 @@ public class ImageActivity extends AppCompatActivity {
         image = findViewById(R.id.image);
         btnComment = findViewById(R.id.btnComment);
         btnRating = findViewById(R.id.btnRating);
+        btnDownload = findViewById(R.id.btnDownload);
         mFrameLayout = (FrameLayout) findViewById(R.id.container);
         mRelativeLayout = (RelativeLayout) findViewById(R.id.rlMain);
         manager = getSupportFragmentManager();
@@ -100,6 +105,17 @@ public class ImageActivity extends AppCompatActivity {
             fragment.setArguments(args);
             add(fragment, "rating", "rating");
             hideLayout();
+        });
+        btnDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = photo.getUrl();
+                DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "image.jpg");
+                downloadManager.enqueue(request);
+            }
         });
 
 

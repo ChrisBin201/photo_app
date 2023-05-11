@@ -118,7 +118,11 @@ public class FragmentUpload extends Fragment {
         cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_token", accessToken));
         cookieManager.getCookieStore().add(URI.create(baseURL), new HttpCookie("flickr_access_secret", accessSecret));
 
-
+        if (!userId.isEmpty() || !userId.equals("")) {
+            loginWithFlickr.setVisibility(View.GONE);
+            ViewGroup viewGroup= (ViewGroup) webView.getParent();
+            viewGroup.removeView(webView);
+        }
         FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
 
 
