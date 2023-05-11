@@ -1,5 +1,6 @@
 package com.example.photo_app.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -63,6 +64,9 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setMessage("Loading..."); // thiết lập tin nhắn
+                progressDialog.show(); // hiển thị ProgressDialog
                 if (radioGroup.getCheckedRadioButtonId() != -1) {
                     int scopeID = radioGroup.getCheckedRadioButtonId();
                     RadioButton radioButton = radioGroup.findViewById(scopeID);
@@ -79,6 +83,7 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                             @Override
                             public void onResponse(Call<List<User>> call, retrofit2.Response<List<User>> response) {
                                 if (response.isSuccessful()) {
+                                    progressDialog.dismiss();
                                     List<User> users = response.body();
                                     if (users == null)
                                         Toast.makeText(getContext(), "No user found", Toast.LENGTH_SHORT).show();
@@ -107,6 +112,7 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
 
                             @Override
                             public void onFailure(Call<List<User>> call, Throwable t) {
+                                progressDialog.dismiss();
                                 Log.d("TAG", "onFailure: " + t.getMessage());
                             }
                         });
@@ -117,6 +123,7 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                             @Override
                             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                                 if (response.isSuccessful()) {
+                                    progressDialog.dismiss();
                                     ArrayList<Post> posts = response.body();
                                     // Initialize RecyclerView and its adapter
                                     recycleView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -127,6 +134,7 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
                                     postAdapter.notifyDataSetChanged();
 
                                 } else {
+                                    progressDialog.dismiss();
                                     // handle request errors depending on status code
                                     Log.e("Error 1: ", response.message());
                                 }
@@ -134,13 +142,16 @@ public class FragmentSearch extends Fragment implements RecycleViewAdapterUser.I
 
                             @Override
                             public void onFailure(Call<ArrayList<Post>> call, Throwable t) {
+                                progressDialog.dismiss();
                                 // handle failure
                                 Log.e("Errorwtf: ", t.getMessage());
                             }
                         });
                     }
-                } else
+                } else{
+                    progressDialog.dismiss();
                     Toast.makeText(getContext(), "Please select a object", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
