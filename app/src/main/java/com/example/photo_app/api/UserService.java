@@ -61,6 +61,6 @@ public interface UserService {
     @GET("user/getUserById/{id}")
     Call<User> getUserById(@Path("id") Long id);
 
-    @POST("login/google/{idToken}")
+    @POST("auth/login/google/{idToken}")
     Call<LoginResponse> checkLoginGoogle(@Path("idToken") String idToken);
 }

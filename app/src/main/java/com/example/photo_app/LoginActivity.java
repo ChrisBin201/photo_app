@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
     private GoogleSignInClient mGoogleSignInClient;
     private EditText editTextUsername, editTextPassword;
-    private Button buttonLogin, buttonBypass;
+    private Button buttonLogin;
     private TextView buttonRegister;
     private CallbackManager callbackManager;
     private LoginButton loginButtonFB;
@@ -83,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegister = findViewById(R.id.link_signup);
         loginButtonFB = findViewById(R.id.login_button);
         callbackManager = CallbackManager.Factory.create();
-        buttonBypass = findViewById(R.id.btnBypass);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
@@ -149,13 +148,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.makeText(LoginActivity.this, "Unable to call server", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-        });
-        buttonBypass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
             }
         });
         buttonRegister.setOnClickListener(new View.OnClickListener() {
