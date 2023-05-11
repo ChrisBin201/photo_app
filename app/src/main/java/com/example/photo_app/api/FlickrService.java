@@ -4,6 +4,7 @@ import com.example.photo_app.model.call.flickr.PhotoByPhotosetResponse;
 import com.example.photo_app.model.call.flickr.PhotoIdResponse;
 import com.example.photo_app.model.call.flickr.PhotoSourceResponse;
 import com.example.photo_app.model.call.flickr.PhotoURLResponse;
+import com.example.photo_app.model.call.flickr.PhotosByUserResponse;
 import com.example.photo_app.model.call.flickr.PhotosetsResponse;
 
 import java.util.List;
@@ -30,6 +31,9 @@ public interface FlickrService {
     // trả duy 1 nhất 1 url string (size original)
     @GET("/api/v1/photo/getById")
     Call<PhotoURLResponse> getImageUrlByImgId(@Query("photo_id") String id);
+
+    @GET("api/v1/photo/getByUserId")
+    Call<PhotosByUserResponse> getImageByUserId();
 
     @GET("/api/v1/photoset/getByUserid")
     Call<PhotosetsResponse> getPhotosetByUserId();

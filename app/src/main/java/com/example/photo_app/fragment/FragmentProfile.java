@@ -15,6 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.photo_app.AlbumActivity;
 import com.example.photo_app.EditProfileActivity;
@@ -22,11 +25,14 @@ import com.example.photo_app.FollowedViewActivity;
 import com.example.photo_app.FollowingViewActivity;
 import com.example.photo_app.LoginActivity;
 import com.example.photo_app.R;
+import com.example.photo_app.adapter.ImagePagerAdapter;
+import com.example.photo_app.adapter.RecycleViewAdapterImage;
 import com.example.photo_app.api.ApiClient;
 import com.example.photo_app.api.FlickrService;
 import com.example.photo_app.api.GoClient;
 import com.example.photo_app.api.UserService;
 import com.example.photo_app.model.User;
+import com.example.photo_app.model.call.flickr.PhotosByUserResponse;
 import com.example.photo_app.model.call.flickr.PhotosetsResponse;
 
 import java.net.CookieManager;
@@ -37,13 +43,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FragmentProfile extends Fragment {
+public class FragmentProfile extends Fragment implements RecycleViewAdapterImage.ItemListener {
 
     private User user;
+    private RecycleViewAdapterImage recycleViewAdapterImage;
     private Button btnEditProfile;
     private Button btnAlbums;
     private TextView tvFollowers, tvFollowing, tvName, tvAddress;
     private LinearLayout lnListFollowers, lnListFollowing;
+    private RecyclerView recyclerView;
+
 
     @Nullable
     @Override
@@ -64,6 +73,44 @@ public class FragmentProfile extends Fragment {
         lnListFollowers = view.findViewById(R.id.lnListFollowers);
         lnListFollowing = view.findViewById(R.id.lnListFollowing);
         btnAlbums = view.findViewById(R.id.btnAlbums);
+        recyclerView = view.findViewById(R.id.recycleView);
+
+        recycleViewAdapterImage = new RecycleViewAdapterImage(getActivity(), this);
+        final List<PhotosByUserResponse.photoByUserResponse>[] list = new List[]{new ArrayList<>()};
+        FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
+        Call<PhotosByUserResponse> call = flickrService.getImageByUserId();
+        call.enqueue(new Callback<PhotosByUserResponse>() {
+            @Override
+            public void onResponse(Call<PhotosByUserResponse> call, Response<PhotosByUserResponse> response) {
+                System.out.println("Success get photo by response");
+                list[0] = response.body().getPhotos();
+                recycleViewAdapterImage.setList(list[0]);
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                recyclerView.setAdapter(recycleViewAdapterImage);
+
+                recycleViewAdapterImage.setItemListener(new RecycleViewAdapterImage.ItemListener() {
+                    @Override
+                    public void OnItemClick(View view, int p) {
+//                String id = list.get(p).getId();
+////                Intent intent = new Intent(getActivity(), ImageActivity.class);
+//                intent.putExtra("id", id);
+//                startActivity(intent);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<PhotosByUserResponse> call, Throwable t) {
+                System.out.println("Failed get photo by response");
+            }
+        });
+//        PhotosByUserResponse urlImage = new PhotosByUserResponse();
+
+//       urlImage.setPhotos(list);
+
+
+
 
         btnEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +129,7 @@ public class FragmentProfile extends Fragment {
                 photosetsResponseCall.enqueue(new Callback<PhotosetsResponse>() {
                     @Override
                     public void onResponse(Call<PhotosetsResponse> call, Response<PhotosetsResponse> response) {
-                        System.out.println("SUCCESS with size of "+ response.body().getResponse().size());
+                        System.out.println("SUCCESS with size of " + response.body().getResponse().size());
                         ArrayList<PhotosetsResponse.PhotosetResponse> photosetsResponseList = (ArrayList<PhotosetsResponse.PhotosetResponse>) response.body().getResponse();
 
                         startActivity(new Intent(getActivity(), AlbumActivity.class).putExtra("photosets_response", photosetsResponseList));
@@ -229,5 +276,10 @@ public class FragmentProfile extends Fragment {
                 Toast.makeText(context, "Unable to call server", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void OnItemClick(View view, int p) {
+
     }
 }

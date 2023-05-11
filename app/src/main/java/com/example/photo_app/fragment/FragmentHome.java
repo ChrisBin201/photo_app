@@ -44,12 +44,9 @@ public class FragmentHome extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        int userId = 1;
-        ArrayList<Integer> followingIds = new ArrayList<>();
         // call get api to retrieve following ids using retrofit
-        PostApiClient postApiClient = new PostApiClient();
-        CookieManager cookieManager = FragmentUpload.getCookieManager();
-        postApiClient.getFeed(1, new Callback<ArrayList<Post>>() {
+        PostApiClient postApiClient = new PostApiClient(getContext());
+        postApiClient.getFeed(new Callback<ArrayList<Post>>() {
             @Override
             public void onResponse(Call<ArrayList<Post>> call, Response<ArrayList<Post>> response) {
                 if (response.isSuccessful()) {
@@ -58,7 +55,7 @@ public class FragmentHome extends Fragment {
                     RecyclerView recyclerView = view.findViewById(R.id.recycleViewItemPost);
                     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                    FlickrService flickrService = GoClient.createService(FlickrService.class, getActivity(), cookieManager);
+                    FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
                     PostAdapter postAdapter = new PostAdapter(posts, postApiClient, getActivity(), flickrService);
                     recyclerView.setAdapter(postAdapter);
                     // notify adapter that data has changed
@@ -76,12 +73,6 @@ public class FragmentHome extends Fragment {
                 Log.e("Error: ", t.getMessage());
             }
         });
-
-
-
-
-
-
 
     }
 }

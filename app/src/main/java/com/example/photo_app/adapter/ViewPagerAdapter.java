@@ -8,6 +8,8 @@ import com.example.photo_app.fragment.FragmentHome;
 import com.example.photo_app.fragment.FragmentProfile;
 import com.example.photo_app.fragment.FragmentSearch;
 import com.example.photo_app.fragment.FragmentUpload;
+import com.example.photo_app.fragment.ratingComment.FragmentViewComments;
+import com.example.photo_app.fragment.ratingComment.FragmentViewRatings;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -22,8 +24,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         switch (position) {
             case 0:
                 return new FragmentHome();
+//                return new FragmentViewComments();
             case 1:
                 return new FragmentSearch();
+//                return new FragmentViewRatings();
             case 2:
                 return new FragmentUpload();
             case 3:
