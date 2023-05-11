@@ -22,7 +22,7 @@ public class PostApiClient {
     public PostApiClient(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
 //                .baseUrl("http://10.0.2.2:5000/api/")
-                .baseUrl("https://4x6dhdewqcxwk32ykeseerrmda.srv.us/api/")
+                .baseUrl("https://yqshgzopthx3x6fmbqbg3zoq6m.srv.us/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

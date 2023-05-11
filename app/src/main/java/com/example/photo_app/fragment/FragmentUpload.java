@@ -131,7 +131,6 @@ public class FragmentUpload extends Fragment {
 
                         ViewGroup parent =(ViewGroup) webView.getParent();
                         parent.removeView(webView);
-
                         // update SharedPreference flickr = true\
                         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("flickr", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -140,6 +139,8 @@ public class FragmentUpload extends Fragment {
                         editor.apply();
 
                     } catch (MalformedURLException e) {
+                        ViewGroup parent =(ViewGroup) webView.getParent();
+                        parent.removeView(webView);
                         throw new RuntimeException(e);
                     }
                 }
@@ -195,16 +196,20 @@ public class FragmentUpload extends Fragment {
                             postApiClient.uploadPost(body, new Callback<Post>() {
                                 @Override
                                 public void onResponse(Call<Post> call, Response<Post> response) {
-                                    Post post = response.body();
-                                    Log.d("Upload success:", post.toString());
-                                    Toast.makeText(getActivity(), "Post uploaded successfully", Toast.LENGTH_SHORT).show();
-                                    // reset all fields
-                                    edtCaption.setText("");
-                                    selectedFiles.clear();
-                                    selectedImages.clear();
-                                    if (adapter != null) {
-                                        adapter.notifyDataSetChanged();
-                                    }
+                                   if(response.isSuccessful()){
+                                       Post post = response.body();
+                                       Log.d("Upload success:", post.toString());
+                                       Toast.makeText(getActivity(), "Post uploaded successfully", Toast.LENGTH_SHORT).show();
+                                       // reset all fields
+                                       edtCaption.setText("");
+                                       selectedFiles.clear();
+                                       selectedImages.clear();
+                                       if (adapter != null) {
+                                           adapter.notifyDataSetChanged();
+                                       }
+                                   } else {
+                                        Log.d("Upload error:", response.errorBody().toString());
+                                   }
                                 }
 
                                 @Override
@@ -255,6 +260,11 @@ public class FragmentUpload extends Fragment {
                     }
                 } else if (data.getData() != null) {
                     selectedImages.add(data.getData().toString());
+                    Uri uri = data.getData();
+                    File file = Utils.getFileFromUri(uri, getActivity());
+                    if (file.exists()){
+                        selectedFiles.add(file);
+                    }
                 }
                 ListView imgList = getView().findViewById(R.id.imgList);
                 adapter = new ImageListAdapter(getContext(), selectedImages);

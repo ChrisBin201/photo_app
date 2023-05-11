@@ -155,7 +155,7 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         boolean isLogin = sharedPreferences.getBoolean("flickr", false);
 
         if (isLogin == false) {
-            Toast.makeText(getActivity(), "sdsdsdsds", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Not login with flickr yet", Toast.LENGTH_SHORT).show();
         } else {
             FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
             Call<PhotosByUserResponse> call = flickrService.getImageByUserId("id");
@@ -233,7 +233,7 @@ public class FragmentProfile extends Fragment implements RecycleViewAdapterImage
         String userID = sharedPreferences.getString("user_id", "");
 
         if (isLogin == false) {
-            Toast.makeText(getActivity(), "sdsdsdsdsd", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Not login with flickr yet", Toast.LENGTH_SHORT).show();
         } else {
             FlickrService flickrService = GoClient.createServiceNonCookie(FlickrService.class, getActivity());
             Call<PhotosByUserResponse> call = flickrService.getImageByUserId(userID);
