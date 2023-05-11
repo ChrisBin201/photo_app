@@ -32,7 +32,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         registry_button = findViewById(R.id.btnRegistry);
-//        back_button = findViewById(R.id.btnBack);
         backArrow = findViewById(R.id.backArrow);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
@@ -52,7 +51,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 User user = new User(null, username.getText().toString(), password.getText().toString(),
-                        fullname.getText().toString(), address.getText().toString());
+                        fullname.getText().toString(), address.getText().toString(), null);
 
                 Context context = getApplicationContext(); // Lấy Context của ứng dụng
 
