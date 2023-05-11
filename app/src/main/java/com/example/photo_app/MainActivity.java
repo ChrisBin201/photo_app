@@ -11,13 +11,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.photo_app.adapter.ViewPagerAdapter;
 import com.example.photo_app.model.notification.NotificationModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.MetadataChanges;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -46,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager(),
                 FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -68,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 3:
                         bottomNavi.getMenu().findItem(R.id.mProfile).setChecked(true);
+                        break;
+                    case 4:
+                        bottomNavi.getMenu().findItem(R.id.mNoti).setChecked(true);
                         break;
                 }
             }
@@ -91,6 +89,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.mProfile:
                     viewPager.setCurrentItem(3);
+                    break;
+                case R.id.mNoti:
+                    viewPager.setCurrentItem(4);
                     break;
             }
             return true;
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                             doc.getString("type"),
                             doc.getLong("objectSendId"),
                             doc.getString("content"),
+                            doc.getString("photoId"),
                             doc.getString("status")
                     );
                     notificationModels.add(notification);
@@ -125,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 notifications.clear();
                 notifications.addAll(notificationModels);
+                adapter.setmNotifications(notifications);
                 bottomNavi.getOrCreateBadge(R.id.mNoti).setNumber(notifications.size());
                 Log.d("MainActivity", "Current notifications : " + notifications.size());
             }

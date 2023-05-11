@@ -7,18 +7,28 @@ public class NotificationModel {
     private String type;
     private Long ObjectSendId;
     private String content;
+    private String photoId;
     private String status;
 
-    public NotificationModel(Long id, Long objectReceiveId, String type, Long objectSendId, String content, String status) {
+    public NotificationModel(Long id, Long objectReceiveId, String type, Long objectSendId, String content, String photoId, String status) {
         this.id = id;
         ObjectReceiveId = objectReceiveId;
         this.type = type;
         ObjectSendId = objectSendId;
         this.content = content;
+        this.photoId = photoId;
         this.status = status;
     }
 
     public NotificationModel() {
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 
     public Long getId() {
